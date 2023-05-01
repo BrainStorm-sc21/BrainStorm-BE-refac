@@ -1,4 +1,4 @@
-package com.brainstrom.meokjang.dto;
+package com.brainstrom.meokjang.domain;
 
 import lombok.Getter;
 import lombok.Setter;

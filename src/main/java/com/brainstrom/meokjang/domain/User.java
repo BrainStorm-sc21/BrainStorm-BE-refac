@@ -41,6 +41,17 @@ public class User {
 
     }
 
+    public User(String userName, String phoneNumber, String snsConnect, String location,
+                double latitude, double longitude, int gender) {
+        this.userName = userName;
+        this.phoneNumber = phoneNumber;
+        this.snsConnect = snsConnect;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.gender = gender;
+    }
+
     public User(UserForm userForm) {
         this.userName = userForm.getUserName();
         this.phoneNumber = userForm.getPhoneNumber();

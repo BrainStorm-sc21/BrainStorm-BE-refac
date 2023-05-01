@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserForm {
-    private long userId;
     private String userName;
     private String phoneNumber;
     private String snsConnect;
