@@ -25,6 +25,21 @@ public class UserService {
         }
     }
 
+    public User login(String phoneNumber, String snsType, String snsKey) {
+        try {
+            User user;
+            if ((user = userRepository.findByPhoneNumber(phoneNumber)) == null) {
+                if ((user = userRepository.findBySns(snsType, snsKey)) == null) {
+                    throw new IllegalStateException("존재하지 않는 회원입니다.");
+                }
+                else return user;
+            }
+            else return user;
+        } finally {
+
+        }
+    }
+
     private void validateDuplicateUser(User user) {
         userRepository.findByName(user.getUserName())
                         .ifPresent(m -> {
@@ -35,4 +50,5 @@ public class UserService {
     public User findUser(long userId) {
         return userRepository.findById(userId);
     }
+
 }
