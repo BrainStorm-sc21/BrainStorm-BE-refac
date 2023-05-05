@@ -37,4 +37,46 @@ public class UserServiceTest {
         //then
         assertEquals(user, userRepository.findById(savedId));
     }
+
+    @Test
+    void login1() throws Exception {
+        //given
+        User user = new User();
+        user.setUserName("test");
+        user.setPhoneNumber("01012345678");
+        user.setLocation("test");
+        user.setLatitude(0.0);
+        user.setLongitude(0.0);
+        user.setGender(1);
+        user.setReliability((float)50);
+
+        //when
+        long savedId = userService.join(user);
+        User loginUser = userService.login("01012345678", null, null);
+
+        //then
+        assertEquals(savedId, loginUser.getUserId());
+    }
+
+    @Test
+    void login2() throws Exception {
+        //given
+        User user = new User();
+        user.setUserName("test");
+        user.setSnsType("naver");
+        user.setSnsKey("test");
+        user.setLocation("test");
+        user.setLatitude(0.0);
+        user.setLongitude(0.0);
+        user.setGender(1);
+        user.setReliability((float)50);
+
+        //when
+        long savedId = userService.join(user);
+        User loginUser = userService.login(null, "naver", "test");
+
+        //then
+        assertEquals(savedId, loginUser.getUserId());
+    }
+
 }
