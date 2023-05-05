@@ -1,10 +1,10 @@
 package com.brainstrom.meokjang.authtest;
 
 import com.brainstrom.meokjang.domain.User;
+import com.brainstrom.meokjang.dto.LoginRequestDTO;
 import com.brainstrom.meokjang.repository.UserRepository;
 import com.brainstrom.meokjang.service.UserService;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +52,9 @@ public class UserServiceTest {
 
         //when
         long savedId = userService.join(user);
-        User loginUser = userService.login("01012345678", null, null);
+        LoginRequestDTO dto = new LoginRequestDTO();
+        dto.setPhoneNumber("01012345678");
+        User loginUser = userService.login(dto);
 
         //then
         assertEquals(savedId, loginUser.getUserId());
@@ -73,7 +75,10 @@ public class UserServiceTest {
 
         //when
         long savedId = userService.join(user);
-        User loginUser = userService.login(null, "naver", "test");
+        LoginRequestDTO dto = new LoginRequestDTO();
+        dto.setSnsType("naver");
+        dto.setSnsKey("test");
+        User loginUser = userService.login(dto);
 
         //then
         assertEquals(savedId, loginUser.getUserId());

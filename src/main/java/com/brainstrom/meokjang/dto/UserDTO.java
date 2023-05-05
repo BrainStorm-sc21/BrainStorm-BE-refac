@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-public class UserDto {
+public class UserDTO {
 
     private Long userId;
     private String userName;
