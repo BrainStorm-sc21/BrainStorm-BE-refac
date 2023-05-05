@@ -2,20 +2,18 @@ package com.brainstrom.meokjang.service;
 
 import com.brainstrom.meokjang.domain.User;
 import com.brainstrom.meokjang.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class UserService {
 
-    private UserRepository userRepository;
-
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
     public Long join(User user) {
         try {
@@ -35,6 +33,6 @@ public class UserService {
     }
 
     public User findUser(long userId) {
-        return userRepository.findById(userId).get();
+        return userRepository.findById(userId);
     }
 }
