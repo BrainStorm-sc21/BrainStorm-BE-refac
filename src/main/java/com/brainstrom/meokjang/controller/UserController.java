@@ -1,6 +1,7 @@
 package com.brainstrom.meokjang.controller;
 
 import com.brainstrom.meokjang.domain.User;
+import com.brainstrom.meokjang.dto.AuthResponseDTO;
 import com.brainstrom.meokjang.dto.LoginRequestDTO;
 import com.brainstrom.meokjang.dto.SignupRequestDTO;
 import com.brainstrom.meokjang.service.UserService;
@@ -28,7 +29,11 @@ public class UserController {
             User user = dto.toUser();
             userService.join(user);
             userService.validateDuplicateUser(dto.toUser());
-            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+            AuthResponseDTO res = new AuthResponseDTO();
+            res.setStatus("success");
+            res.setMessage("회원가입 성공");
+            res.setUserId(user.getUserId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(res);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -42,7 +47,11 @@ public class UserController {
         }
         try {
             User user = userService.login(dto);
-            return ResponseEntity.ok(user);
+            AuthResponseDTO res = new AuthResponseDTO();
+            res.setStatus("success");
+            res.setMessage("로그인 성공");
+            res.setUserId(user.getUserId());
+            return ResponseEntity.ok(res);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
