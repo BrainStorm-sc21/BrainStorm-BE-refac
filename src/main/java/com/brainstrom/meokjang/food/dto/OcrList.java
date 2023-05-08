@@ -10,7 +10,8 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-public class FoodList {
+public class OcrList {
     private Integer count;
-    private List<Map<String, Object>> foodList;
+    // OCR 결과를 담는 리스트
+    private List<Map<String, Object>> ocrList;
 }

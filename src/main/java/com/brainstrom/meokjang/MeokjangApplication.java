@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication
 public class MeokjangApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(MeokjangApplication.class, args);
 	}
