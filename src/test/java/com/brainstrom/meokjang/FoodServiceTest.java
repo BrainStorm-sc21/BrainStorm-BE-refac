@@ -29,7 +29,7 @@ public class FoodServiceTest {
         List<FoodResponse> result = foodService.getList(userId);
         assertEquals(savedFood, result);
     }
-//
+
 //    @Test
 //    public void testSaveFood() {
 //        Food food = new Food(1L, "food1", 10, "2023-05-01", "냉장");

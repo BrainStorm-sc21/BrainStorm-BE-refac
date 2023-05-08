@@ -1,17 +1,20 @@
 package com.brainstrom.meokjang.food.service;
 
-import com.brainstrom.meokjang.dto.OcrList;
+import com.brainstrom.meokjang.food.dto.OcrFoodDto;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class OcrService {
 
-    public OcrList doOcr(OcrRequest ocrRequest) throws IOException {
+    public List<OcrFoodDto> doOcr(OcrRequest ocrRequest) throws IOException {
         // API 요청 URL
         String url = "https://capi.clova.ai/v1/ocr";
 
@@ -30,7 +33,7 @@ public class OcrService {
         ResponseEntity<String> response = restTemplate.postForEntity(url, requestBody, String.class);
 
         // API 응답 결과 파싱
-        OcrList ocrList = null;
+        List<OcrFoodDto> ocrList = null;
         if (response.getStatusCode() == HttpStatus.OK) {
             String responseBody = response.getBody();
             if (ocrRequest.getType() == "document") {
@@ -44,7 +47,20 @@ public class OcrService {
         }
         return ocrList;
     }
-    public OcrList documentToList(String responseBody){
+    public List<OcrFoodDto> documentToList(String responseBody){
+        List<OcrFoodDto> ocrList;
+
+        JSONObject jsonObject = new JSONObject(responseBody);
+        JSONObject result = jsonObject.getJSONObject("result");
+        JSONArray subResults = result.getJSONArray("subResults");
+        for (int i = 0; i < subResults.length(); i++) {
+            JSONArray items = subResults.getJSONObject(i).getJSONArray("items");
+            for (int j = 0; j < items.length(); j++) {
+                String foodName = items.getJSONObject(j).getJSONObject("name").getString("text");
+                String foodCount = items.getJSONObject(j).getJSONObject("count").getString("text");
+            }
+        }
+
         return null;
     }
 
@@ -81,7 +97,7 @@ public class OcrService {
 //                    },
 //                    priceInfo: {2 items}
 
-    public OcrList generalToList(String responseBody){
+    public List<OcrFoodDto> generalToList(String responseBody){
         return null;
     }
 }

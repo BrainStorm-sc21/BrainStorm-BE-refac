@@ -12,11 +12,11 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class FoodRequest {
-    private Long userId;
-    private String foodName;
-    private Integer stock;
-    private LocalDate expireDate;
-    private String storageWay;
+    private final Long userId;
+    private final String foodName;
+    private final Integer stock;
+    private final LocalDate expireDate;
+    private final String storageWay;
 
     public Food toEntity(){
         Food food = new Food();

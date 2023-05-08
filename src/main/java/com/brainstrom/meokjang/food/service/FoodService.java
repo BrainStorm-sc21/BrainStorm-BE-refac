@@ -1,8 +1,8 @@
 package com.brainstrom.meokjang.food.service;
 
 import com.brainstrom.meokjang.food.domain.Food;
+import com.brainstrom.meokjang.food.dto.OcrFoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodRequest;
-import com.brainstrom.meokjang.dto.OcrList;
 import com.brainstrom.meokjang.food.dto.response.FoodResponse;
 import com.brainstrom.meokjang.food.dto.response.OcrResponse;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
@@ -63,9 +63,9 @@ public class FoodService {
     }
 
 
-    public OcrList extractFood(OcrRequest ocrRequest) {
+    public List<OcrFoodDto> extractFood(OcrRequest ocrRequest) {
        OcrService ocrService = new com.brainstrom.meokjang.food.service.OcrService();
-       OcrList ocrList = new OcrList();
+       List<OcrFoodDto> ocrList = null;
        try{
            ocrList = ocrService.doOcr(ocrRequest);
        }
@@ -75,7 +75,7 @@ public class FoodService {
        return ocrList;
     }
 
-    public List<OcrResponse> recommend(OcrList ocrList) {
+    public List<OcrResponse> recommend(List<OcrFoodDto> ocrList) {
         return null;
     }
 

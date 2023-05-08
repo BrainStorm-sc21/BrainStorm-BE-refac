@@ -1,8 +1,8 @@
 package com.brainstrom.meokjang.food.controller;
 
 import com.brainstrom.meokjang.common.dto.response.ApiResponse;
+import com.brainstrom.meokjang.food.dto.OcrFoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodRequest;
-import com.brainstrom.meokjang.dto.OcrList;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
 import com.brainstrom.meokjang.food.dto.response.FoodResponse;
 import com.brainstrom.meokjang.food.dto.response.OcrResponse;
@@ -69,7 +69,7 @@ public class FoodController {
     @ResponseBody
     @PostMapping("/food/recommend")
     public ResponseEntity<ApiResponse> recommendFood(@RequestBody OcrRequest ocrRequest) {
-        OcrList ocrList = foodService.extractFood(ocrRequest);
+        List<OcrFoodDto> ocrList = foodService.extractFood(ocrRequest);
         List<OcrResponse> result = foodService.recommend((ocrList));
         ApiResponse apiResponse = new ApiResponse(200, "스마트 등록 성공", result);
         return ResponseEntity.ok(apiResponse);
