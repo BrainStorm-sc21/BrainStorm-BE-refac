@@ -2,7 +2,7 @@ package com.brainstrom.meokjang.user.dto.response;
 
 import lombok.Getter;
 
-@Getter // 수정하기
+@Getter
 public class AuthResponse {
     private Long userId;
 
