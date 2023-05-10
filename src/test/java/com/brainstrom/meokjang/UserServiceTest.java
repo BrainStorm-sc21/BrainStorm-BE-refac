@@ -1,9 +1,11 @@
 package com.brainstrom.meokjang;
 
-import com.brainstrom.meokjang.user.dto.request.LoginRequest;
+import com.brainstrom.meokjang.user.domain.User;
 import com.brainstrom.meokjang.user.dto.request.SignupRequest;
+import com.brainstrom.meokjang.user.dto.response.UserInfoResponse;
 import com.brainstrom.meokjang.user.repository.UserRepository;
 import com.brainstrom.meokjang.user.service.AuthService;
+import com.brainstrom.meokjang.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,18 +13,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Transactional
-public class AuthServiceTest {
+public class UserServiceTest {
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final AuthService authService;
 
     @Autowired
-    public AuthServiceTest(UserRepository userRepository, AuthService authService) {
+    public UserServiceTest(UserRepository userRepository, UserService userService, AuthService authService) {
         this.userRepository = userRepository;
+        this.userService = userService;
         this.authService = authService;
     }
 
@@ -32,8 +39,8 @@ public class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("회원가입 테스트")
-    void join() {
+    @DisplayName("회원 정보 조회 테스트")
+    void getUserInfo() {
         //given
         SignupRequest signupRequest = SignupRequest.builder()
                 .userName("test")
@@ -45,16 +52,19 @@ public class AuthServiceTest {
                 .reliability((float)50)
                 .build();
 
-        //when
         Long savedId = authService.join(signupRequest).getUserId();
+
+        //when
+        UserInfoResponse userInfoResponse = userService.getUserInfo(savedId);
+
         //then
-        assertNotNull(savedId);
-        assertEquals(userRepository.findByPhoneNumber("01012345678"), userRepository.findByUserId(savedId));
+        assertNotNull(userInfoResponse);
+        assertEquals(savedId, userInfoResponse.getUserId());
     }
 
     @Test
-    @DisplayName("로그인 테스트 - 전화번호")
-    void login1() {
+    @DisplayName("회원 정보 수정 테스트")
+    void updateUserInfo() {
         //given
         SignupRequest signupRequest = SignupRequest.builder()
                 .userName("test")
@@ -65,42 +75,16 @@ public class AuthServiceTest {
                 .gender(1)
                 .reliability((float)50)
                 .build();
-        LoginRequest loginRequest = LoginRequest.builder()
-                .phoneNumber("01012345678")
-                .build();
+
+        Long savedId = authService.join(signupRequest).getUserId();
 
         //when
-        Long savedId = authService.join(signupRequest).getUserId();
-        Long loginId = authService.login(loginRequest).getUserId();
+        UserInfoResponse userInfoResponse = userService.updateUserInfo(savedId, "test2");
+        User user = userRepository.findByUserId(savedId)
+                .orElse(null);
 
         //then
-        assertEquals(savedId, loginId);
-    }
-
-    @Test
-    @DisplayName("로그인 테스트 - SNS")
-    void login2() {
-        //given
-        SignupRequest signupRequest = SignupRequest.builder()
-                .userName("test")
-                .snsType("naver")
-                .snsKey("test")
-                .location("test")
-                .latitude(0.0)
-                .longitude(0.0)
-                .gender(1)
-                .reliability((float)50)
-                .build();
-        LoginRequest loginRequest = LoginRequest.builder()
-                .snsType("naver")
-                .snsKey("test")
-                .build();
-
-        //when
-        Long savedId = authService.join(signupRequest).getUserId();
-        Long loginId = authService.login(loginRequest).getUserId();
-
-        //then
-        assertEquals(savedId, loginId);
+        assertNotNull(userInfoResponse);
+        assertEquals(user.getUserName(), "test2");
     }
 }
