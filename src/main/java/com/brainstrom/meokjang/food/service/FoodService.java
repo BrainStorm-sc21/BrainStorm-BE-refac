@@ -48,12 +48,11 @@ public class FoodService {
     public FoodResponse update(Long foodId, FoodRequest foodRequest) {
         Food foodEntity = foodRepo.findById(foodId)
                         .orElseThrow(() -> new IllegalArgumentException("해당 음식이 없습니다."));
-        Food food = foodRequest.toEntity();
-        foodEntity.setFoodName(food.getFoodName());
-        foodEntity.setStock(food.getStock());
-        foodEntity.setExpireDate(food.getExpireDate());
-        foodEntity.setStorageWay(food.getStorageWay());
-        return new FoodResponse(foodEntity);
+        foodEntity.setFoodName(foodRequest.getFoodName());
+        foodEntity.setStock(foodRequest.getStock());
+        foodEntity.setExpireDate(foodRequest.getExpireDate());
+        foodEntity.setStorageWay(foodRequest.getStorageWay());
+        return new FoodResponse(foodRepo.save(foodEntity));
     }
 
     public FoodResponse get(Long foodId) {
@@ -63,21 +62,19 @@ public class FoodService {
     }
 
 
-    public List<OcrFoodDto> extractFood(OcrRequest ocrRequest) {
-       OcrService ocrService = new com.brainstrom.meokjang.food.service.OcrService();
+    public List<OcrResponse> recommend(OcrRequest ocrRequest) {
+       RecommendService recommendService = new RecommendService();
        List<OcrFoodDto> ocrList = null;
        try{
-           ocrList = ocrService.doOcr(ocrRequest);
+           ocrList = recommendService.doOcr(ocrRequest);
        }
          catch (Exception e){
               e.printStackTrace();
          }
-       return ocrList;
+       // ocrList 로 추천 로직 구현
+
+
+
+       return null;
     }
-
-    public List<OcrResponse> recommend(List<OcrFoodDto> ocrList) {
-        return null;
-    }
-
-
 }

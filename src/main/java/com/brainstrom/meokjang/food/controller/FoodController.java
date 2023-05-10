@@ -34,25 +34,25 @@ public class FoodController {
     @PostMapping("/food/add")
     public ResponseEntity<ApiResponse> addFood(@RequestBody FoodRequest foodRequest) {
         FoodResponse food = foodService.save(foodRequest);
-        ApiResponse apiResponse = new ApiResponse(200, "음식 추가 성공", food);
+        ApiResponse apiResponse = new ApiResponse(200, "음식 추가 성공", null);
         return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("/food/addList")
     public ResponseEntity<ApiResponse> addFoodList(@RequestBody List<FoodRequest> foodList) {
         List<FoodResponse> savedList = foodService.saveList(foodList);
-        ApiResponse apiResponse = new ApiResponse(200, "음식 추가 성공", savedList);
+        ApiResponse apiResponse = new ApiResponse(200, "음식 목록 추가 성공", null);
         return ResponseEntity.ok(apiResponse);
     }
 
-    @DeleteMapping("/food/delete/{foodId}")
+    @DeleteMapping("/food/{foodId}")
     public ResponseEntity<ApiResponse> deleteFood(@PathVariable Long foodId) {
         foodService.delete(foodId);
         ApiResponse apiResponse = new ApiResponse(200, "음식 삭제 성공", null);
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PutMapping("/food/update/{foodId}")
+    @PutMapping("/food/{foodId}")
     public ResponseEntity<ApiResponse> updateFood(@PathVariable Long foodId, @RequestBody FoodRequest foodRequest) {
         FoodResponse updatedFood = foodService.update(foodId, foodRequest);
         ApiResponse apiResponse = new ApiResponse(200, "음식 수정 성공", updatedFood);
@@ -69,8 +69,7 @@ public class FoodController {
     @ResponseBody
     @PostMapping("/food/recommend")
     public ResponseEntity<ApiResponse> recommendFood(@RequestBody OcrRequest ocrRequest) {
-        List<OcrFoodDto> ocrList = foodService.extractFood(ocrRequest);
-        List<OcrResponse> result = foodService.recommend((ocrList));
+        List<OcrResponse> result = foodService.recommend((ocrRequest));
         ApiResponse apiResponse = new ApiResponse(200, "스마트 등록 성공", result);
         return ResponseEntity.ok(apiResponse);
     }

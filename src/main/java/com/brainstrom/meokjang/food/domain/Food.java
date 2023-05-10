@@ -1,7 +1,5 @@
 package com.brainstrom.meokjang.food.domain;
 
-import com.brainstrom.meokjang.food.dto.request.FoodRequest;
-import com.brainstrom.meokjang.food.dto.response.FoodResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,9 +39,5 @@ public class Food {
         this.expireDate = LocalDate.parse(expireDate);
         this.storageWay = storageWay;
         this.createdAt = LocalDateTime.now();
-    }
-
-    public FoodRequest toFoodRequest() {
-        return new FoodRequest(this.userId, this.foodName, this.stock, this.expireDate, this.storageWay);
     }
 }

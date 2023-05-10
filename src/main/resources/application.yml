@@ -1,9 +1,9 @@
 spring:
     datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/meokjang?serverTimezone=UTC&characterEncoding=UTF-8
-      username: root
-      password:
+      driver-class-name: ${DB_DRIVER}
+      url: ${DB_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
 
     jpa:
       hibernate:
@@ -14,3 +14,8 @@ spring:
 
     logging.level:
       org.hibernate.SQL: debug
+
+DOCUMENT_URL: ${DOCUMENT_URL}
+GENERAL_URL: ${GENERAL_URL}
+DOCUMENT_SECRET_KEY: ${DOCUMENT_SECRET_KEY}
+GENERAL_SECRET_KEY: ${GENERAL_SECRET_KEY}
