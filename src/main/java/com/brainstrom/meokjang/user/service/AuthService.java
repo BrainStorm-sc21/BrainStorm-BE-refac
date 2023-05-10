@@ -20,9 +20,8 @@ public class AuthService {
 
     public AuthResponse join(SignupRequest req) {
         try {
-            User user = req.toEntity();
+            User user = userRepository.save(req.toEntity());
             validateDuplicateUser(user);
-            userRepository.save(user);
             return new AuthResponse(user.getUserId());
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
@@ -37,9 +36,7 @@ public class AuthService {
     }
 
     public void validateDuplicateUser(User user) {
-        userRepository.findByName(user.getUserName())
-                        .ifPresent(m -> {
-                            throw new IllegalStateException("이미 존재하는 회원입니다.");
-                        });
+        userRepository.findById(user.getUserId())
+                        .orElseThrow(() -> new IllegalStateException("이미 존재하는 회원입니다."));
     }
 }

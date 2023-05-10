@@ -1,8 +1,5 @@
 package com.brainstrom.meokjang.common.dto.response;
 
-import lombok.Getter;
-
-@Getter
 public class ApiResponse {
     private Integer status;
     private String message;

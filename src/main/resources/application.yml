@@ -1,16 +1,16 @@
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/meokjang?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1234
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/meokjang?serverTimezone=UTC&characterEncoding=UTF-8
+      username: root
+      password:
 
-  jpa:
-    hibernate:
-      ddl-auto: create
-      show-sql: true
-      hibernate.format_sql: true
-      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    jpa:
+      hibernate:
+        ddl-auto: create
+        show-sql: true
+        hibernate.format_sql: true
+        naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
-  logging.level:
-    org.hibernate.SQL: debug
+    logging.level:
+      org.hibernate.SQL: debug
