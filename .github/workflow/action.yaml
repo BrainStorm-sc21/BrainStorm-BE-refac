@@ -1,6 +1,9 @@
 name: CI_CD
 run-name: CI_CD workflow
-on: [push]
+on:
+  push:
+  pull_request:
+    types: [merged]
 
 jobs:
   deploy-image:
