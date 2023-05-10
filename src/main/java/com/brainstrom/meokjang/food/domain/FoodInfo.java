@@ -16,7 +16,7 @@ public class FoodInfo {
     private Long infoId;
 
     @Column(name = "info_name", length = 20, nullable = false)
-    private String InfoName;
+    private String infoName;
 
     @Column(name = "storage_way", nullable = false)
     private Integer storageWay;
@@ -25,9 +25,9 @@ public class FoodInfo {
     private Integer storageDay;
 
     @Builder
-    public FoodInfo(Long infoId, String InfoName, Integer storageWay, Integer storageDay) {
+    public FoodInfo(Long infoId, String infoName, Integer storageWay, Integer storageDay) {
         this.infoId = infoId;
-        this.InfoName = InfoName;
+        this.infoName = infoName;
         this.storageWay = storageWay;
         this.storageDay = storageDay;
     }

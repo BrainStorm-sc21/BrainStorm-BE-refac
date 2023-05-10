@@ -49,7 +49,7 @@ public class AuthServiceTest {
         Long savedId = authService.join(signupRequest).getUserId();
         //then
         assertNotNull(savedId);
-        assertEquals(userRepository.findByPhoneNumber("01012345678"), userRepository.findById(savedId));
+        assertEquals(userRepository.findByPhoneNumber("01012345678"), userRepository.findByUserId(savedId));
     }
 
     @Test
