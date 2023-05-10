@@ -2,8 +2,10 @@ package com.brainstrom.meokjang.food.service;
 
 import com.brainstrom.meokjang.food.dto.OcrFoodDto;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
+import lombok.Value;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,18 +15,30 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+@Configuration
 public class RecommendService {
+//    private String document_url;
+//    private final String general_url;
+//    private final String document_secretKey;
+//    private final String general_secretKey;
+    private String url;
+    private String secretKey;
+//
+//    public RecommendService(@Value(staticConstructor = "${GENERAL_URL}") String general_url, @Value("${GENERAL_SECRET_KEY}") String general_secretKey, @Value("${DOCUMENT_URL}") String document_url, @Value("${DOCUMENT_SECRET_KEY}") String document_secretKey) {
+//        this.general_url = general_url;
+//        this.general_secretKey = general_secretKey;
+//        this.document_url = document_url;
+//        this.document_secretKey = document_secretKey;
+//    }
 
     public List<OcrFoodDto> doOcr(OcrRequest ocrRequest) throws IOException {
         // API 요청 URL
-        String url;
-        String secretKey;
         if (ocrRequest.getType().equals("document")) {
-            url = "{Document-Url}";
-            secretKey = "{Document-Secret-Key}}";
+            url = "";
+            secretKey = "";
         } else {
-            url = "{General-Url}";
-            secretKey = "{General-Secret-Key}";
+            url = "";
+            secretKey = "";
         }
         // API 요청 헤더 정보
         HttpHeaders headers = new HttpHeaders();
