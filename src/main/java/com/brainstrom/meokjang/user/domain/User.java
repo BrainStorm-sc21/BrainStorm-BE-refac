@@ -10,24 +10,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(schema = "USER")
 @Getter
 @NoArgsConstructor
 public class User {
 
-    @Id
+    @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     @Column(name = "user_name", length = 6, nullable = false)
     private String userName;
 
-    @Column(name = "phone_number", length = 11)
+    @Column(name = "phone_number", length = 11, unique = true)
     private String phoneNumber;
 
     @Column(name = "sns_type", length = 5)
     private String snsType;
 
-    @Column(name = "sns_key", length = 100)
+    @Column(name = "sns_key", length = 100, unique = true)
     private String snsKey;
 
     @Column(name = "location", length = 40, nullable = false)
@@ -53,8 +54,9 @@ public class User {
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String userName, String phoneNumber, String snsType, String snsKey, String location,
+    public User(Long userId, String userName, String phoneNumber, String snsType, String snsKey, String location,
                 Double latitude, Double longitude, Integer gender, Float reliability, LocalDate stopUntil) {
+        this.userId = userId;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.snsType = snsType;
@@ -65,5 +67,9 @@ public class User {
         this.gender = gender;
         this.reliability = reliability;
         this.stopUntil = stopUntil;
+    }
+
+    public void changeUserName(String userName) {
+        this.userName = userName;
     }
 }
