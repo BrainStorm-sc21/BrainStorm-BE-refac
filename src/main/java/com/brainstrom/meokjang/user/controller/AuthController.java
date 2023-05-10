@@ -4,19 +4,23 @@ import com.brainstrom.meokjang.common.dto.response.ApiResponse;
 import com.brainstrom.meokjang.user.dto.request.LoginRequest;
 import com.brainstrom.meokjang.user.dto.request.SignupRequest;
 import com.brainstrom.meokjang.user.service.AuthService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequiredArgsConstructor
+@RestController
 public class AuthController {
 
     private final AuthService authService;
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/users/create")
     public ResponseEntity<ApiResponse> create(@RequestBody SignupRequest dto, BindingResult result) {

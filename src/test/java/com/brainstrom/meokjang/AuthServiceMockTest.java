@@ -137,7 +137,7 @@ public class AuthServiceMockTest {
                 .build();
 
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-        Mockito.when(userRepository.findBySns(Mockito.anyString(), Mockito.anyString())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findBySnsTypeAndSnsKey(Mockito.anyString(), Mockito.anyString())).thenReturn(Optional.of(user));
 
         //when
         Long savedId = authService.join(signupRequest).getUserId();

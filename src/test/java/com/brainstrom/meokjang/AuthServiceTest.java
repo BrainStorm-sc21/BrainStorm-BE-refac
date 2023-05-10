@@ -17,10 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 public class AuthServiceTest {
 
+    private final UserRepository userRepository;
+    private final AuthService authService;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuthService authService;
+    public AuthServiceTest(UserRepository userRepository, AuthService authService) {
+        this.userRepository = userRepository;
+        this.authService = authService;
+    }
 
     @BeforeEach
     void beforeEach() {
