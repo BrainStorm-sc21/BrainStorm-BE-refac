@@ -20,9 +20,8 @@ public class AuthService {
 
     public AuthResponse join(SignupRequest req) {
         try {
-            User user = req.toEntity();
+            User user = userRepository.save(req.toEntity());
             validateDuplicateUser(user);
-            userRepository.save(user);
             return new AuthResponse(user.getUserId());
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());

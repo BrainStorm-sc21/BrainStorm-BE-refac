@@ -3,7 +3,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/meokjang?serverTimezone=UTC&characterEncoding=UTF-8
       username: root
-      password: kangmin909
+      password:
 
     jpa:
       hibernate:
@@ -11,7 +11,6 @@ spring:
         show-sql: true
         hibernate.format_sql: true
         naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
 
     logging.level:
       org.hibernate.SQL: debug

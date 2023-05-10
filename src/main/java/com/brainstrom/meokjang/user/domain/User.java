@@ -53,8 +53,9 @@ public class User {
     private LocalDateTime createdAt;
 
     @Builder
-    public User(String userName, String phoneNumber, String snsType, String snsKey, String location,
+    public User(Long userId, String userName, String phoneNumber, String snsType, String snsKey, String location,
                 Double latitude, Double longitude, Integer gender, Float reliability, LocalDate stopUntil) {
+        this.userId = userId;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.snsType = snsType;
