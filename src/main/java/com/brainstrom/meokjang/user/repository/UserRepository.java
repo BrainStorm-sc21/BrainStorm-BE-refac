@@ -3,17 +3,17 @@ package com.brainstrom.meokjang.user.repository;
 import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class UserRepository {
 
-    private final EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
     public User save(User user) {
         em.persist(user);

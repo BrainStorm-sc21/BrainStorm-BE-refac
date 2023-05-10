@@ -10,24 +10,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(schema = "USER")
 @Getter
 @NoArgsConstructor
 public class User {
 
-    @Id
+    @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     @Column(name = "user_name", length = 6, nullable = false)
     private String userName;
 
-    @Column(name = "phone_number", length = 11)
+    @Column(name = "phone_number", length = 11, unique = true)
     private String phoneNumber;
 
     @Column(name = "sns_type", length = 5)
     private String snsType;
 
-    @Column(name = "sns_key", length = 100)
+    @Column(name = "sns_key", length = 100, unique = true)
     private String snsKey;
 
     @Column(name = "location", length = 40, nullable = false)

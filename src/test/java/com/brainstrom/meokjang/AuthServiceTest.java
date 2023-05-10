@@ -4,6 +4,7 @@ import com.brainstrom.meokjang.user.dto.request.LoginRequest;
 import com.brainstrom.meokjang.user.dto.request.SignupRequest;
 import com.brainstrom.meokjang.user.repository.UserRepository;
 import com.brainstrom.meokjang.user.service.AuthService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class AuthServiceTest {
     private UserRepository userRepository;
     @Autowired
     private AuthService authService;
+
+    @BeforeEach
+    void beforeEach() {
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("회원가입 테스트")
