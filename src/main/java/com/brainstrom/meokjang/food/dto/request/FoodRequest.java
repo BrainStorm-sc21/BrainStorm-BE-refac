@@ -4,6 +4,7 @@ import com.brainstrom.meokjang.food.domain.Food;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class FoodRequest {
     private final Long userId;
     private final String foodName;
     private final Integer stock;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private final LocalDate expireDate;
     private final String storageWay;
 
@@ -29,11 +31,11 @@ public class FoodRequest {
         return food;
     }
 
-    public FoodRequest(Long userId, String foodName, Integer stock, LocalDate expireDate, String storageWay) {
+    public FoodRequest(Long userId, String foodName, Integer stock, String expireDate, String storageWay) {
         this.userId = userId;
         this.foodName = foodName;
         this.stock = stock;
-        this.expireDate = expireDate;
+        this.expireDate = LocalDate.parse(expireDate);
         this.storageWay = storageWay;
     }
 }

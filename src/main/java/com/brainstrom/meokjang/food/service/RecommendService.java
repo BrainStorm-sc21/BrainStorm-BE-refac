@@ -10,18 +10,26 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
-public class OcrService {
+public class RecommendService {
 
     public List<OcrFoodDto> doOcr(OcrRequest ocrRequest) throws IOException {
         // API 요청 URL
-        String url = "https://capi.clova.ai/v1/ocr";
-
+        String url;
+        String secretKey;
+        if (ocrRequest.getType().equals("document")) {
+            url = "{Document-Url}";
+            secretKey = "{Document-Secret-Key}}";
+        } else {
+            url = "{General-Url}";
+            secretKey = "{General-Secret-Key}";
+        }
         // API 요청 헤더 정보
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-OCR-SECRET", "{Your-Secret-Key}");
+        headers.set("X-OCR-SECRET", secretKey);
 
         // API 요청 바디 정보 (이미지 파일)
         File imageFile = ocrRequest.getImage().getResource().getFile();
@@ -48,7 +56,7 @@ public class OcrService {
         return ocrList;
     }
     public List<OcrFoodDto> documentToList(String responseBody){
-        List<OcrFoodDto> ocrList;
+        List<OcrFoodDto> ocrList = new ArrayList<>();
 
         JSONObject jsonObject = new JSONObject(responseBody);
         JSONObject result = jsonObject.getJSONObject("result");
@@ -58,10 +66,10 @@ public class OcrService {
             for (int j = 0; j < items.length(); j++) {
                 String foodName = items.getJSONObject(j).getJSONObject("name").getString("text");
                 String foodCount = items.getJSONObject(j).getJSONObject("count").getString("text");
+                ocrList.add(new OcrFoodDto(foodName, Integer.parseInt(foodCount)));
             }
         }
-
-        return null;
+        return ocrList;
     }
 
 //    {
