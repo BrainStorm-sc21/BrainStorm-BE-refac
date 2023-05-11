@@ -19,11 +19,9 @@ jobs:
           username: ${{ secrets.ACCESS_KEY }}
           password: ${{ secrets.ACCESS_SECRET_KEY }}
 
-      - name: Clone Repo
-        run: git clone https://github.com/BrainStorm-sc21/secret_data.git
-
-      - name: Move application.yml
-        run: sudo cp secret_data/application.yml src/main/resources/application.yml
+      - name: Set up application.yml
+        run: |
+          echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > src/main/resources/application.yml
 
       - name: Set ENV
         run: echo "TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
@@ -33,3 +31,6 @@ jobs:
         with:
           push: true
           tags: dlrkdals909/meokjang:${{ env.TIME }}
+
+      - name: Remove application.yml
+        run: rm -f src/main/resources/application.yml
