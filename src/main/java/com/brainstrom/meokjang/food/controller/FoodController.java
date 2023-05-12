@@ -55,7 +55,7 @@ public class FoodController {
     @PutMapping("/food/{foodId}")
     public ResponseEntity<ApiResponse> updateFood(@PathVariable Long foodId, @RequestBody FoodRequest foodRequest) {
         FoodResponse updatedFood = foodService.update(foodId, foodRequest);
-        ApiResponse apiResponse = new ApiResponse(200, "음식 수정 성공", updatedFood);
+        ApiResponse apiResponse = new ApiResponse(200, "음식 수정 성공", null);
         return ResponseEntity.ok(apiResponse);
     }
 
