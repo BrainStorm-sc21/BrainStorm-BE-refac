@@ -20,6 +20,7 @@ jobs:
           password: ${{ secrets.ACCESS_SECRET_KEY }}
 
       - name: Set up application.yml
+        uses: actions/checkout@v2
         run: |
           sudo chmod -R 777 ./src/main/resources
           echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > ./src/main/resources/application.yml
@@ -33,4 +34,5 @@ jobs:
           tags: dlrkdals909/meokjang:${{ env.TIME }}
 
       - name: Remove application.yml
+        uses: actions/checkout@v2
         run: rm -f ./src/main/resources/application.yml
