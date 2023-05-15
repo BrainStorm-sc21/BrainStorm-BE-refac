@@ -9,10 +9,12 @@ import com.brainstrom.meokjang.food.dto.request.OcrRequest;
 import com.brainstrom.meokjang.food.repository.FoodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -24,6 +26,9 @@ public class FoodService {
     public FoodService(FoodRepository foodRepo) {
         this.foodRepo = foodRepo;
     }
+
+    @Autowired
+    private RecommendService recommendService;
 
     public List<FoodResponse> getList(Long userId) {
         List<Food> foods = foodRepo.findAllByUserId(userId);
@@ -63,18 +68,14 @@ public class FoodService {
 
 
     public List<OcrResponse> recommend(OcrRequest ocrRequest) {
-       RecommendService recommendService = new RecommendService();
-       List<OcrFoodDto> ocrList = null;
-       try{
-           ocrList = recommendService.doOcr(ocrRequest);
-       }
-         catch (Exception e){
-              e.printStackTrace();
-         }
-       // ocrList 로 추천 로직 구현
+        Map<Integer, OcrFoodDto> ocrResult = null;
+        try {
+            ocrResult = recommendService.doOcr(ocrRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 추천 로직 구현
 
-
-
-       return null;
+        return null;
     }
 }
