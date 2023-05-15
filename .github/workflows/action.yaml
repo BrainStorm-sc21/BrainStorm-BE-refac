@@ -38,3 +38,4 @@ jobs:
 
       - name: Remove application.yml
         run: rm -rf ./src/main/resources/application.yml
+
