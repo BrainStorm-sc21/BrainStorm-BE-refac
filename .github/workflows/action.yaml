@@ -37,4 +37,4 @@ jobs:
           tags: dlrkdals909/meokjang:${{ env.TIME }}
 
       - name: Remove application.yml
-        run: rm -f ./src/main/resources/application.yml
+        run: rm -rf ./src/main/resources/application.yml
