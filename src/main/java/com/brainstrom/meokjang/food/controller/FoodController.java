@@ -1,7 +1,8 @@
 package com.brainstrom.meokjang.food.controller;
 
 import com.brainstrom.meokjang.common.dto.response.ApiResponse;
-import com.brainstrom.meokjang.food.dto.OcrFoodDto;
+import com.brainstrom.meokjang.food.dto.request.FoodListRequest;
+import com.brainstrom.meokjang.food.dto.request.FoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodRequest;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
 import com.brainstrom.meokjang.food.dto.response.FoodResponse;
@@ -33,14 +34,14 @@ public class FoodController {
 
     @PostMapping("/food/add")
     public ResponseEntity<ApiResponse> addFood(@RequestBody FoodRequest foodRequest) {
-        FoodResponse food = foodService.save(foodRequest);
+        foodService.save(foodRequest);
         ApiResponse apiResponse = new ApiResponse(200, "음식 추가 성공", null);
         return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("/food/addList")
-    public ResponseEntity<ApiResponse> addFoodList(@RequestBody List<FoodRequest> foodList) {
-        List<FoodResponse> savedList = foodService.saveList(foodList);
+    public ResponseEntity<ApiResponse> addFoodList(@RequestBody FoodListRequest foodList) {
+        foodService.saveList(foodList);
         ApiResponse apiResponse = new ApiResponse(200, "음식 목록 추가 성공", null);
         return ResponseEntity.ok(apiResponse);
     }

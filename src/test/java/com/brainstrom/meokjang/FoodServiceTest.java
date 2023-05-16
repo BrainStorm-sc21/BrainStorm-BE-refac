@@ -1,12 +1,12 @@
 package com.brainstrom.meokjang;
 
 import com.brainstrom.meokjang.food.domain.Food;
+import com.brainstrom.meokjang.food.dto.request.FoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodRequest;
 import com.brainstrom.meokjang.food.dto.response.FoodResponse;
 import com.brainstrom.meokjang.food.repository.FoodRepository;
 import com.brainstrom.meokjang.food.service.FoodService;
 import org.junit.jupiter.api.Test;
-import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class FoodServiceTest {
     public void testSaveFood() {
         //saveFoodTest
 
-        FoodRequest foodRequest = new FoodRequest(1L,"food1", 10, "2023-05-01", "냉장");
+        FoodRequest foodRequest = new FoodRequest(1L, new FoodDto("food1", 10, "2023-05-01", "냉장"));
         Food foodEntity = new Food(1L,"food1", 10, "2023-05-01", "냉장");
         when(foodRepoMock.save(Mockito.any(Food.class))).thenReturn(foodEntity);
 
@@ -69,18 +69,17 @@ public class FoodServiceTest {
     @Test
     public void testUpdate() {
         Long foodId = 1L;
-        FoodRequest foodToUpdate = new FoodRequest(1L, "food2", 5, "2023-05-01", "냉장");
+        FoodRequest foodRequest = new FoodRequest(1L, new FoodDto("food2", 5, "2023-05-01", "냉장"));
         Food foodEntity = new Food(1L, "food1", 10, "2023-05-01", "냉장");
         when(foodRepoMock.findById(foodId)).thenReturn(Optional.of(foodEntity));
         when(foodRepoMock.save(Mockito.any(Food.class))).thenReturn(foodEntity);
 
-        FoodResponse result = foodService.update(foodId, foodToUpdate);
+        FoodResponse result = foodService.update(foodId, foodRequest);
 
-        assertEquals(foodEntity.getFoodName(), result.getFoodName());
-        assertEquals(foodToUpdate.getFoodName(), foodEntity.getFoodName());
-        assertEquals(foodToUpdate.getStock(), foodEntity.getStock());
-        assertEquals(foodToUpdate.getExpireDate(), foodEntity.getExpireDate());
-        assertEquals(foodToUpdate.getStorageWay(), foodEntity.getStorageWay());
+        assertEquals(foodRequest.getFood().getFoodName(), result.getFoodName());
+        assertEquals(foodRequest.getFood().getStock(), result.getStock());
+        assertEquals(foodRequest.getFood().getExpireDate(), result.getExpireDate());
+        assertEquals(foodRequest.getFood().getStorageWay(), result.getStorageWay());
     }
 
     @Test
