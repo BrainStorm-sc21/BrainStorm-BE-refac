@@ -24,6 +24,7 @@ jobs:
 
       - name: Set up application.yml
         run: |
+          mkdir -p ./src/main/resources
           sudo chmod -R 777 ./src/main/resources
           echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > ./src/main/resources/application.yml
 
