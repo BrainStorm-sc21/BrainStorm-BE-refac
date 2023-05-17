@@ -37,8 +37,8 @@ jobs:
           cat ./src/main/resources/application.yml
 
       - name: Check Dockerfile
-          run:
-            cat ./Dockerfile
+        run:
+          cat ./Dockerfile
 
       - name: Build and Push
         uses: docker/build-push-action@v4
