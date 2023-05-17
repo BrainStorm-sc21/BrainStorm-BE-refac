@@ -30,6 +30,9 @@ jobs:
           APPLICATION_YAML_CONTENT: ${{ secrets.APPLICATION_YAML_CONTENT }}
         run: echo $APPLICATION_YAML_CONTENT | base64 --decode > ./src/main/resources/application.yml
 
+      - name: Check application.yml
+        run: cat ./src/main/resources/application.yml
+
       - name: Set ENV
         run: echo "TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
 
