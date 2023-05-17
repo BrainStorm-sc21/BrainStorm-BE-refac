@@ -26,7 +26,9 @@ jobs:
         run: mkdir -p ./src/main/resources
 
       - name: Set up application.yml
-        run: echo ${{ secrets.APPLICATION_YAML_CONTENT }} | base64 --decode > ./src/main/resources/application.yml
+        env:
+          APPLICATION_YAML_CONTENT: ${{ secrets.APPLICATION_YAML_CONTENT }}
+        run: echo $APPLICATION_YAML_CONTENT | base64 --decode > ./src/main/resources/application.yml
 
       - name: Set ENV
         run: echo "TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
