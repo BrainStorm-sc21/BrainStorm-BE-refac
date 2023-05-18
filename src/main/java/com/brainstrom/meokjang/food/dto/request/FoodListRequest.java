@@ -2,15 +2,16 @@ package com.brainstrom.meokjang.food.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class FoodRequest {
+public class FoodListRequest {
     private Long userId;
-    private FoodDto food;
+    private List<FoodDto> foodList;
 
-    public FoodRequest(Long userId, FoodDto food) {
+    public FoodListRequest(Long userId, List<FoodDto> foodList) {
         this.userId = userId;
-        this.food = food;
+        this.foodList = foodList;
     }
 }

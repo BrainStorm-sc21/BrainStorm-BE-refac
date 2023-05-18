@@ -1,11 +1,11 @@
 package com.brainstrom.meokjang.food.dto.request;
 
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@ToString
+@NoArgsConstructor
 public class OcrRequest {
     private String type;
     private MultipartFile image;
