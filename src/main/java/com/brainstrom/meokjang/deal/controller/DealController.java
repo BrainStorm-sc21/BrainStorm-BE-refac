@@ -19,7 +19,7 @@ public class DealController {
         this.dealService = dealService;
     }
 
-    @GetMapping("/deal/{userId}/nearby")
+    @GetMapping("/deal/{userId}/around")
     public ResponseEntity<ApiResponse> getDealList(@PathVariable Long userId, BindingResult result) {
 
         if (result.hasErrors()) {
