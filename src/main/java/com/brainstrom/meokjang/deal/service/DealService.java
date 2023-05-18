@@ -17,7 +17,6 @@ import java.util.List;
 @Transactional
 public class DealService {
 
-    private static final double EARTH_RADIUS = 6371;
     private final DealRepository dealRepository;
     private final UserRepository userRepository;
 
@@ -50,23 +49,23 @@ public class DealService {
         }
     }
 
-    public List<DealInfoResponse> aroundDealList(Long dealId) {
+    public List<DealInfoResponse> aroundDealList(Long userId) {
         try {
-            Deal deal = dealRepository.findById(dealId)
-                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
-            List<Deal> deals = dealRepository.findAroundDealList(deal.getLatitude(), deal.getLongitude());
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+            List<Deal> deals = dealRepository.findAroundDealList(user.getLatitude(), user.getLongitude());
             List<DealInfoResponse> dealLists = new ArrayList<>();
             for (Deal d : deals) {
+                Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());
                 DealInfoResponse res = DealInfoResponse.builder()
                         .dealId(d.getDealId())
                         .userId(d.getUserId())
+                        .dealType(d.getDealType())
                         .dealName(d.getDealName())
                         .dealContent(d.getDealContent())
                         .latitude(d.getLatitude())
                         .longitude(d.getLongitude())
-                        .distance(Math.acos(Math.sin(deal.getLatitude()) * Math.sin(d.getLatitude())
-                                + Math.cos(deal.getLatitude()) * Math.cos(d.getLatitude())
-                                * Math.cos(deal.getLongitude() - d.getLongitude())) * EARTH_RADIUS)
+                        .distance(distance)
                         .image1(d.getImage1())
                         .image2(d.getImage2())
                         .image3(d.getImage3())
@@ -88,10 +87,12 @@ public class DealService {
             return DealInfoResponse.builder()
                     .dealId(deal.getDealId())
                     .userId(deal.getUserId())
+                    .dealType(deal.getDealType())
                     .dealName(deal.getDealName())
                     .dealContent(deal.getDealContent())
                     .latitude(deal.getLatitude())
                     .longitude(deal.getLongitude())
+                    .distance(null)
                     .image1(deal.getImage1())
                     .image2(deal.getImage2())
                     .image3(deal.getImage3())
@@ -119,5 +120,18 @@ public class DealService {
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    private Double getDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
+        final int R = 6371;
+        Double dLat = Math.toRadians(lat2 - lat1);
+        Double dLon = Math.toRadians(lon2 - lon1);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        Double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        Double distance = R * c * 1000; // 결과 단위 미터(m)
+        return distance;
     }
 }

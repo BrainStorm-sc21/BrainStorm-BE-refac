@@ -11,6 +11,7 @@ public class DealInfoResponse {
 
     private Long dealId;
     private Long userId;
+    private Integer dealType;
     private String dealName;
     private String dealContent;
     private Double latitude;
@@ -22,10 +23,11 @@ public class DealInfoResponse {
     private String image4;
     private LocalDateTime createdAt;
 
-    public DealInfoResponse(Long dealId, Long userId, String dealName, String dealContent, Double latitude, Double longitude,
+    public DealInfoResponse(Long dealId, Long userId, Integer dealType,String dealName, String dealContent, Double latitude, Double longitude,
                             Double distance, String image1, String image2, String image3, String image4, LocalDateTime createdAt) {
         this.dealId = dealId;
         this.userId = userId;
+        this.dealType = dealType;
         this.dealName = dealName;
         this.dealContent = dealContent;
         this.latitude = latitude;
