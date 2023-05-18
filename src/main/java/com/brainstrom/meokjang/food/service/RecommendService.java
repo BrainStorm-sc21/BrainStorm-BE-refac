@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,15 +37,6 @@ public class RecommendService {
     }
 
     public Map<Integer, OcrFoodDto> doOcr(OcrRequest ocrRequest) throws IOException {
-        // API 요청 URL
-        if (ocrRequest.getType().equals("document")) {
-            url = document_url;
-            secretKey = document_secretKey;
-        } else {
-            url = general_url;
-            secretKey = general_secretKey;
-        }
-        // API 요청 헤더 정보
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-OCR-SECRET", secretKey);
@@ -52,8 +44,22 @@ public class RecommendService {
         // API 요청 바디 정보 (이미지 파일)
         File imageFile = ocrRequest.getImage().getResource().getFile();
         byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
-        HttpEntity<byte[]> requestBody = new HttpEntity<>(imageBytes, headers);
+        String base64EncodedImage = Base64.getEncoder().encodeToString(imageBytes);
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("version", "V2");
+        requestJson.put("requestId", "meokjang");
+        requestJson.put("timestamp", Long.toString(System.currentTimeMillis()));
+        requestJson.put("images", new JSONArray().put(new JSONObject().put("format", "png").put("name", "test").put("data", base64EncodedImage)));
 
+        if (ocrRequest.getType().equals("document")) {
+            url = document_url;
+            secretKey = document_secretKey;
+        } else {
+            url = general_url;
+            secretKey = general_secretKey;
+            requestJson.put("lang", "ko");
+        }
+        HttpEntity<JSONObject> requestBody = new HttpEntity<>(requestJson, headers);
         // API 호출
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(url, requestBody, String.class);
@@ -73,6 +79,7 @@ public class RecommendService {
         }
         return ocrResult;
     }
+
     public Map<Integer, OcrFoodDto> documentToList(String responseBody) {
         Map<Integer, OcrFoodDto> ocrResult = new HashMap<>();
         int count = 0;
