@@ -83,6 +83,7 @@ public class FoodService {
         Map<Integer, OcrFoodDto> ocrResult = null;
         try {
             ocrResult = recommendService.doOcr(ocrRequest);
+            if (ocrResult == null) throw new IllegalArgumentException("OCR 결과가 없습니다.");
         } catch (Exception e) {
             e.printStackTrace();
         }

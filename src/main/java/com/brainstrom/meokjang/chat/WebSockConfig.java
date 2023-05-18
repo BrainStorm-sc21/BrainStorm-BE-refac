@@ -14,6 +14,10 @@ public class WebSockConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+<<<<<<< HEAD
         registry.addHandler(webSocketHandler, "ws/meokjang").setAllowedOrigins("*");
+=======
+        registry.addHandler(webSocketHandler, "/ws").setAllowedOrigins("*");
+>>>>>>> feature_chat
     }
 }
