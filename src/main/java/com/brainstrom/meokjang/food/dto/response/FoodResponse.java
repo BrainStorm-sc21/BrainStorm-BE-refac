@@ -17,14 +17,11 @@ public class FoodResponse {
 
     private final String storageWay;
 
-    private final LocalDateTime createdAt;
-
     public FoodResponse(Food food) {
         this.foodId = food.getFoodId();
         this.foodName = food.getFoodName();
         this.stock = food.getStock();
         this.expireDate = food.getExpireDate();
         this.storageWay = food.getStorageWay();
-        this.createdAt = food.getCreatedAt();
     }
 }
