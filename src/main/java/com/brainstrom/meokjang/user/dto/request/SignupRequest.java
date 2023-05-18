@@ -15,7 +15,6 @@ public class SignupRequest {
     private Double latitude;
     private Double longitude;
     private Integer gender;
-    private Float reliability;
 
     public User toEntity() {
         return User.builder()
@@ -27,7 +26,7 @@ public class SignupRequest {
                 .latitude(latitude)
                 .longitude(longitude)
                 .gender(gender)
-                .reliability(reliability)
+                .reliability(50F)
                 .build();
     }
 }

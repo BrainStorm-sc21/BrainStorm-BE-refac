@@ -37,7 +37,6 @@ public class AuthServiceMockTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
 
         User user = User.builder()
@@ -74,7 +73,6 @@ public class AuthServiceMockTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
 
         LoginRequest loginRequest = LoginRequest.builder()
@@ -116,7 +114,6 @@ public class AuthServiceMockTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
 
         LoginRequest loginRequest = LoginRequest.builder()

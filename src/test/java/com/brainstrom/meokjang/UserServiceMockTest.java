@@ -39,7 +39,6 @@ public class UserServiceMockTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
 
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(signupRequest.toEntity());
