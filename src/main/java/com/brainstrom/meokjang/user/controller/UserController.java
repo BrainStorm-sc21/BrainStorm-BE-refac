@@ -18,11 +18,8 @@ public class UserController {
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse> getUserInfo(@PathVariable Long userId, BindingResult result) {
+    public ResponseEntity<ApiResponse> getUserInfo(@PathVariable Long userId) {
 
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(400, "유저 정보 조회 실패", result.getAllErrors()));
-        } // 이 부분 GlobalExceptionHandler로 빼기
         try {
             ApiResponse res = new ApiResponse(200, "유저 정보 조회 성공", userService.getUserInfo(userId));
             return ResponseEntity.ok(res);

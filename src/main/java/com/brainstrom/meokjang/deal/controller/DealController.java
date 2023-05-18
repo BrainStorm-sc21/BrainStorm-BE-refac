@@ -20,11 +20,8 @@ public class DealController {
     }
 
     @GetMapping("/deal/{userId}/around")
-    public ResponseEntity<ApiResponse> getDealList(@PathVariable Long userId, BindingResult result) {
+    public ResponseEntity<ApiResponse> getDealList(@PathVariable Long userId) {
 
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 목록 조회 실패", result.getAllErrors()));
-        }
         try {
             ApiResponse res = new ApiResponse(200, "거래 목록 조회 성공", dealService.aroundDealList(userId));
             return ResponseEntity.ok(res);
@@ -49,11 +46,8 @@ public class DealController {
     }
 
     @GetMapping("/deal/{dealId}")
-    public ResponseEntity<ApiResponse> getDealInfo(@PathVariable Long dealId, BindingResult result) {
+    public ResponseEntity<ApiResponse> getDealInfo(@PathVariable Long dealId) {
 
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 정보 조회 실패", result.getAllErrors()));
-        }
         try {
             DealInfoResponse dealInfoResponse = dealService.getDealInfo(dealId);
             ApiResponse res = new ApiResponse(200, "거래 정보 조회 성공", dealInfoResponse);
