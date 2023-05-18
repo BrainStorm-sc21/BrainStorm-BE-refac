@@ -82,17 +82,10 @@ public class Deal {
         this.isDeleted = isDeleted;
     }
 
-    public DealInfoResponse toResponse() {
-        return new DealInfoResponse(dealId, userId, dealName, dealContent, location, latitude, longitude, image1, image2, image3, image4);
-    }
-
     public void update(DealRequest dealRequest) {
         this.dealType = dealRequest.getDealType();
         this.dealName = dealRequest.getDealName();
         this.dealContent = dealRequest.getDealContent();
-        this.location = dealRequest.getLocation();
-        this.latitude = dealRequest.getLatitude();
-        this.longitude = dealRequest.getLongitude();
         this.image1 = dealRequest.getImage1();
         this.image2 = dealRequest.getImage2();
         this.image3 = dealRequest.getImage3();
