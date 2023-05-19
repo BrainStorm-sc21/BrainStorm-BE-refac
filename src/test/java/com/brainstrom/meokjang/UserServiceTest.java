@@ -49,7 +49,6 @@ public class UserServiceTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
 
         Long savedId = authService.join(signupRequest).getUserId();
@@ -73,7 +72,6 @@ public class UserServiceTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
 
         Long savedId = authService.join(signupRequest).getUserId();

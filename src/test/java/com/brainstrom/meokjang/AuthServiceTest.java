@@ -42,7 +42,6 @@ public class AuthServiceTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
 
         //when
@@ -63,7 +62,6 @@ public class AuthServiceTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
         LoginRequest loginRequest = LoginRequest.builder()
                 .phoneNumber("01012345678")
@@ -89,7 +87,6 @@ public class AuthServiceTest {
                 .latitude(0.0)
                 .longitude(0.0)
                 .gender(1)
-                .reliability((float)50)
                 .build();
         LoginRequest loginRequest = LoginRequest.builder()
                 .snsType("naver")

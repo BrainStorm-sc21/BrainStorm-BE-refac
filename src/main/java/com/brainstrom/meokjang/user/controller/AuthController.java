@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/users/create")
-    public ResponseEntity<ApiResponse> create(@RequestBody SignupRequest dto, BindingResult result) {
+    public ResponseEntity<ApiResponse> createUser(@RequestBody SignupRequest dto, BindingResult result) {
 
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(400, "회원가입 실패", result.getAllErrors()));
