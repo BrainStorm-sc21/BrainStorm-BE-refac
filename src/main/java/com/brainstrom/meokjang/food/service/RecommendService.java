@@ -175,11 +175,11 @@ public class RecommendService {
                 for (FoodInfo info : foodInfos) {
                     Integer storageWay;
                     if (info.getStorageWay().equals("냉장")) {
-                        storageWay = 1;
+                        storageWay = 0;
                     } else if (info.getStorageWay().equals("냉동")) {
-                        storageWay = 2;
+                        storageWay = 1;
                     } else {
-                        storageWay = 3;
+                        storageWay = 2;
                     }
                     foodInfo.put(storageWay, info.getStorageDay());
                 }
