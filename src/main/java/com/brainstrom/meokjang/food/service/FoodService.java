@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Map;
 
@@ -73,9 +74,14 @@ public class FoodService {
     }
 
     public FoodResponse get(Long foodId) {
-        Food foodEntity = foodRepo.findById(foodId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 음식이 없습니다."));
-        return new FoodResponse(foodEntity);
+        try {
+            Food foodEntity = foodRepo.findById(foodId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 음식이 없습니다."));
+            return new FoodResponse(foodEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
@@ -88,7 +94,7 @@ public class FoodService {
             e.printStackTrace();
         }
         // 추천 로직 구현
-
+        System.out.println(ocrResult);
         return null;
     }
 }

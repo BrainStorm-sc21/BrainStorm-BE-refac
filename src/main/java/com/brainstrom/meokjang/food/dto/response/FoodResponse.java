@@ -11,7 +11,7 @@ public class FoodResponse {
     private final Long foodId;
     private final String foodName;
 
-    private final Integer stock;
+    private final Double stock;
 
     private final LocalDate expireDate;
 
