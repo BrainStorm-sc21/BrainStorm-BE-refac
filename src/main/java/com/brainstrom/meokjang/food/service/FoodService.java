@@ -44,7 +44,7 @@ public class FoodService {
     }
 
     public List<FoodResponse> saveList(FoodListRequest foodRequest) {
-        List<Food> foods = foodRequest.getFoodList().stream().map(foodDto -> foodDto.toEntity()).toList();
+        List<Food> foods = foodRequest.getFoodList().stream().map(FoodDto::toEntity).toList();
         foods.forEach(food -> food.setUserId(foodRequest.getUserId()));
         List<Food> result = foodRepo.saveAll(foods);
         return result.stream().map(FoodResponse::new).toList();
@@ -58,7 +58,7 @@ public class FoodService {
         try {
             Food foodEntity = foodRepo.findById(foodId)
                     .orElseThrow(() -> new IllegalArgumentException("해당 음식이 없습니다."));
-            if (foodRequest.getUserId() != foodEntity.getUserId()) {
+            if (!foodRequest.getUserId().equals(foodEntity.getUserId())) {
                 throw new IllegalArgumentException("해당 음식의 소유자가 아닙니다.");
             }
             FoodDto foodDto = foodRequest.getFood();
@@ -84,12 +84,14 @@ public class FoodService {
         return null;
     }
 
-
-    public List<OcrResponse> recommend(OcrRequest ocrRequest) {
+    public OcrResponse recommend(OcrRequest ocrRequest) {
         Map<Integer, OcrFoodDto> ocrResult = null;
         try {
             ocrResult = recommendService.doOcr(ocrRequest);
-            if (ocrResult == null) throw new IllegalArgumentException("OCR 결과가 없습니다.");
+            if (ocrResult == null)
+                throw new IllegalArgumentException("OCR 결과가 없습니다.");
+            else
+                return recommendService.recommend(ocrResult);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,9 +1,13 @@
 package com.brainstrom.meokjang.food.service;
 
+import com.brainstrom.meokjang.food.domain.FoodInfo;
 import com.brainstrom.meokjang.food.dto.OcrFoodDto;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
+import com.brainstrom.meokjang.food.dto.response.OcrResponse;
+import com.brainstrom.meokjang.food.repository.FoodInfoRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -14,11 +18,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 @Component
 public class RecommendService {
+
+    private final FoodInfoRepository foodInfoRepository;
     private final String document_url;
     private final String general_url;
     private final String document_secretKey;
@@ -26,10 +33,12 @@ public class RecommendService {
     private String url;
     private String secretKey;
 
-    public RecommendService(@Value("${GENERAL_URL}") String general_url,
+    @Autowired
+    public RecommendService(FoodInfoRepository foodInfoRepository, @Value("${GENERAL_URL}") String general_url,
                             @Value("${GENERAL_SECRET_KEY}") String general_secretKey,
                             @Value("${DOCUMENT_URL}") String document_url,
                             @Value("${DOCUMENT_SECRET_KEY}") String document_secretKey) {
+        this.foodInfoRepository = foodInfoRepository;
         this.general_url = general_url;
         this.general_secretKey = general_secretKey;
         this.document_url = document_url;
@@ -148,7 +157,30 @@ public class RecommendService {
             ocrResult.put(count, new OcrFoodDto(foodName, foodCount));
             count++;
         }
-
         return ocrResult;
+    }
+
+    public OcrResponse recommend(Map<Integer, OcrFoodDto> ocrResult) {
+        try {
+            Map<Integer, Map<String, Integer>> recommend = new HashMap<>();
+            for (Map.Entry<Integer, OcrFoodDto> ocrFood : ocrResult.entrySet()) {
+                Integer idx = ocrFood.getKey();
+                String[] arr = ocrFood.getValue().getFoodName().split(" ");
+                String foodName = arr[arr.length - 1];
+                List<FoodInfo> foodInfos = foodInfoRepository.findByInfoName(foodName);
+                if (foodInfos.size() == 0) {
+                    continue;
+                }
+                Map<String, Integer> foodInfo = new HashMap<>();
+                for (FoodInfo info : foodInfos) {
+                    foodInfo.put(info.getStorageWay(), info.getStorageDay());
+                }
+                recommend.put(idx, foodInfo);
+            }
+            return new OcrResponse(ocrResult, recommend);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
