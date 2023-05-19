@@ -9,9 +9,9 @@ import java.util.Map;
 public class OcrResponse {
 
     private final Map<Integer, OcrFoodDto> list;
-    private final Map<Integer, Map<String, Integer>> recommend;
+    private final Map<Integer, Map<Integer, Integer>> recommend;
 
-    public OcrResponse(Map<Integer, OcrFoodDto> list, Map<Integer, Map<String, Integer>> recommend) {
+    public OcrResponse(Map<Integer, OcrFoodDto> list, Map<Integer, Map<Integer, Integer>> recommend) {
         this.list = list;
         this.recommend = recommend;
     }

@@ -162,7 +162,7 @@ public class RecommendService {
 
     public OcrResponse recommend(Map<Integer, OcrFoodDto> ocrResult) {
         try {
-            Map<Integer, Map<String, Integer>> recommend = new HashMap<>();
+            Map<Integer, Map<Integer, Integer>> recommend = new HashMap<>();
             for (Map.Entry<Integer, OcrFoodDto> ocrFood : ocrResult.entrySet()) {
                 Integer idx = ocrFood.getKey();
                 String[] arr = ocrFood.getValue().getFoodName().split(" ");
@@ -171,9 +171,17 @@ public class RecommendService {
                 if (foodInfos.size() == 0) {
                     continue;
                 }
-                Map<String, Integer> foodInfo = new HashMap<>();
+                Map<Integer, Integer> foodInfo = new HashMap<>();
                 for (FoodInfo info : foodInfos) {
-                    foodInfo.put(info.getStorageWay(), info.getStorageDay());
+                    Integer storageWay;
+                    if (info.getStorageWay().equals("냉장")) {
+                        storageWay = 1;
+                    } else if (info.getStorageWay().equals("냉동")) {
+                        storageWay = 2;
+                    } else {
+                        storageWay = 3;
+                    }
+                    foodInfo.put(storageWay, info.getStorageDay());
                 }
                 recommend.put(idx, foodInfo);
             }
