@@ -22,7 +22,7 @@ public class Food {
     @Column(name = "food_name")
     private String foodName;
     @Column(name = "stock")
-    private Integer stock;
+    private Double stock;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "expire_date")
     private LocalDate expireDate;
@@ -32,7 +32,7 @@ public class Food {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Food(long userId, String foodName, int stock, String expireDate, String storageWay) {
+    public Food(Long userId, String foodName, Double stock, String expireDate, String storageWay) {
         this.userId = userId;
         this.foodName = foodName;
         this.stock = stock;

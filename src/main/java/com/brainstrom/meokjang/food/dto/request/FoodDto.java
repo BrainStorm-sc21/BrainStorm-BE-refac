@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class FoodDto {
     private String foodName;
-    private Integer stock;
+    private Double stock;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate expireDate;
     private String storageWay;
@@ -26,7 +26,7 @@ public class FoodDto {
         return food;
     }
 
-    public FoodDto(String foodName, Integer stock, String expireDate, String storageWay) {
+    public FoodDto(String foodName, Double stock, String expireDate, String storageWay) {
         this.foodName = foodName;
         this.stock = stock;
         this.expireDate = LocalDate.parse(expireDate);
