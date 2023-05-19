@@ -25,8 +25,8 @@ public class FoodServiceTest {
     @Test
     public void testGetList() {
         List<Food> foods = new ArrayList<>();
-        foods.add(new Food(1L, "food1", 10, "2023-05-01", "냉장"));
-        foods.add(new Food(1L, "food2", 20, "2023-05-02", "냉장"));
+        foods.add(new Food(1L, "food1", 10D, "2023-05-01", "냉장"));
+        foods.add(new Food(1L, "food2", 20D, "2023-05-02", "냉장"));
         when(foodRepoMock.findAllByUserId(1L)).thenReturn(foods);
 
         List<FoodResponse> result = foodService.getList(1L);
@@ -45,8 +45,8 @@ public class FoodServiceTest {
     public void testSaveFood() {
         //saveFoodTest
 
-        FoodRequest foodRequest = new FoodRequest(1L, new FoodDto("food1", 10, "2023-05-01", "냉장"));
-        Food foodEntity = new Food(1L,"food1", 10, "2023-05-01", "냉장");
+        FoodRequest foodRequest = new FoodRequest(1L, new FoodDto("food1", 10D, "2023-05-01", "냉장"));
+        Food foodEntity = new Food(1L,"food1", 10D, "2023-05-01", "냉장");
         when(foodRepoMock.save(Mockito.any(Food.class))).thenReturn(foodEntity);
 
         FoodResponse result = foodService.save(foodRequest);
@@ -69,8 +69,8 @@ public class FoodServiceTest {
     @Test
     public void testUpdate() {
         Long foodId = 1L;
-        FoodRequest foodRequest = new FoodRequest(1L, new FoodDto("food2", 5, "2023-05-01", "냉장"));
-        Food foodEntity = new Food(1L, "food1", 10, "2023-05-01", "냉장");
+        FoodRequest foodRequest = new FoodRequest(1L, new FoodDto("food2", 5D, "2023-05-01", "냉장"));
+        Food foodEntity = new Food(1L, "food1", 10D, "2023-05-01", "냉장");
         when(foodRepoMock.findById(foodId)).thenReturn(Optional.of(foodEntity));
         when(foodRepoMock.save(Mockito.any(Food.class))).thenReturn(foodEntity);
 
@@ -85,7 +85,7 @@ public class FoodServiceTest {
     @Test
     public void testGet() {
         Long foodId = 1L;
-        Food food = new Food(1L, "food1", 10, "2023-05-01", "냉장");
+        Food food = new Food(1L, "food1", 10D, "2023-05-01", "냉장");
         when(foodRepoMock.findById(foodId)).thenReturn(Optional.of(food));
 
         FoodResponse result = foodService.get(foodId);
