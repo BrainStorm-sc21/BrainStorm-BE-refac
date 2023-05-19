@@ -2,7 +2,6 @@ package com.brainstrom.meokjang.food.controller;
 
 import com.brainstrom.meokjang.common.dto.response.ApiResponse;
 import com.brainstrom.meokjang.food.dto.request.FoodListRequest;
-import com.brainstrom.meokjang.food.dto.request.FoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodRequest;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
 import com.brainstrom.meokjang.food.dto.response.FoodResponse;

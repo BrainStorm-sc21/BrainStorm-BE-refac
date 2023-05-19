@@ -1,7 +1,6 @@
 package com.brainstrom.meokjang.deal.domain;
 
 import com.brainstrom.meokjang.deal.dto.request.DealRequest;
-import com.brainstrom.meokjang.deal.dto.response.DealInfoResponse;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
