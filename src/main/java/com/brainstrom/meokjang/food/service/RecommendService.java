@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Component
 public class RecommendService {
 
@@ -34,7 +33,8 @@ public class RecommendService {
     private String secretKey;
 
     @Autowired
-    public RecommendService(FoodInfoRepository foodInfoRepository, @Value("${GENERAL_URL}") String general_url,
+    public RecommendService(FoodInfoRepository foodInfoRepository,
+                            @Value("${GENERAL_URL}") String general_url,
                             @Value("${GENERAL_SECRET_KEY}") String general_secretKey,
                             @Value("${DOCUMENT_URL}") String document_url,
                             @Value("${DOCUMENT_SECRET_KEY}") String document_secretKey) {

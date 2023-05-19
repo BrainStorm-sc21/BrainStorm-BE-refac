@@ -23,14 +23,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FoodService {
     private FoodRepository foodRepo;
+    private RecommendService recommendService;
 
     @Autowired
-    public FoodService(FoodRepository foodRepo) {
+    public FoodService(FoodRepository foodRepo, RecommendService recommendService) {
         this.foodRepo = foodRepo;
+        this.recommendService = recommendService;
     }
 
-    @Autowired
-    private RecommendService recommendService;
 
     public List<FoodResponse> getList(Long userId) {
         List<Food> foods = foodRepo.findAllByUserId(userId);
