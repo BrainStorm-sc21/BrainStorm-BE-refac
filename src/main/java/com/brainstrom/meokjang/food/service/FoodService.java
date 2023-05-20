@@ -58,7 +58,7 @@ public class FoodService {
         try {
             Food foodEntity = foodRepo.findById(foodId)
                     .orElseThrow(() -> new IllegalArgumentException("해당 음식이 없습니다."));
-            if (foodRequest.getUserId() != foodEntity.getUserId()) {
+            if (!foodRequest.getUserId().equals(foodEntity.getUserId())) {
                 throw new IllegalArgumentException("해당 음식의 소유자가 아닙니다.");
             }
             FoodDto foodDto = foodRequest.getFood();
