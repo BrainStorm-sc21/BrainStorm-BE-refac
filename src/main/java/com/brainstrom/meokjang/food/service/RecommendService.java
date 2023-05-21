@@ -118,7 +118,9 @@ public class RecommendService {
         } else {
             ocrResult = generalToList(response, ocrResult);
         }
-
+        if (ocrResult.size() == 0) {
+            return null;
+        }
         return ocrResult;
     }
 
