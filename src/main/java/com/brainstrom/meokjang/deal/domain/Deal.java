@@ -81,13 +81,13 @@ public class Deal {
         this.isDeleted = isDeleted;
     }
 
-    public void update(DealRequest dealRequest) {
-        this.dealType = dealRequest.getDealType();
-        this.dealName = dealRequest.getDealName();
-        this.dealContent = dealRequest.getDealContent();
-        this.image1 = dealRequest.getImage1();
-        this.image2 = dealRequest.getImage2();
-        this.image3 = dealRequest.getImage3();
-        this.image4 = dealRequest.getImage4();
+    public void update(Integer dealType, String dealName, String dealContent, String[] imageList) {
+        this.dealType = dealType;
+        this.dealName = dealName;
+        this.dealContent = dealContent;
+        this.image1 = imageList[0];
+        this.image2 = imageList[1];
+        this.image3 = imageList[2];
+        this.image4 = imageList[3];
     }
 }
