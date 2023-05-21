@@ -1,6 +1,7 @@
 package com.brainstrom.meokjang.food.service;
 
 import com.brainstrom.meokjang.food.domain.Food;
+import com.brainstrom.meokjang.food.domain.FoodInfo;
 import com.brainstrom.meokjang.food.dto.OcrFoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodListRequest;
 import com.brainstrom.meokjang.food.dto.request.FoodDto;
@@ -8,6 +9,7 @@ import com.brainstrom.meokjang.food.dto.request.FoodRequest;
 import com.brainstrom.meokjang.food.dto.response.FoodResponse;
 import com.brainstrom.meokjang.food.dto.response.OcrResponse;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
+import com.brainstrom.meokjang.food.repository.FoodInfoRepository;
 import com.brainstrom.meokjang.food.repository.FoodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +24,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FoodService {
     private FoodRepository foodRepo;
+    private FoodInfoRepository foodInfoRepo;
+    private RecommendService recommendService;
 
     @Autowired
-    public FoodService(FoodRepository foodRepo) {
+    public FoodService(FoodRepository foodRepo, FoodInfoRepository foodInfoRepo, RecommendService recommendService) {
         this.foodRepo = foodRepo;
+        this.foodInfoRepo = foodInfoRepo;
+        this.recommendService = recommendService;
     }
 
-    @Autowired
-    private RecommendService recommendService;
 
     public List<FoodResponse> getList(Long userId) {
         List<Food> foods = foodRepo.findAllByUserId(userId);
@@ -43,7 +47,7 @@ public class FoodService {
     }
 
     public List<FoodResponse> saveList(FoodListRequest foodRequest) {
-        List<Food> foods = foodRequest.getFoodList().stream().map(foodDto -> foodDto.toEntity()).toList();
+        List<Food> foods = foodRequest.getFoodList().stream().map(FoodDto::toEntity).toList();
         foods.forEach(food -> food.setUserId(foodRequest.getUserId()));
         List<Food> result = foodRepo.saveAll(foods);
         return result.stream().map(FoodResponse::new).toList();
@@ -83,17 +87,31 @@ public class FoodService {
         return null;
     }
 
-
-    public List<OcrResponse> recommend(OcrRequest ocrRequest) {
+    public OcrResponse recommend(OcrRequest ocrRequest) {
         Map<Integer, OcrFoodDto> ocrResult = null;
         try {
             ocrResult = recommendService.doOcr(ocrRequest);
-            if (ocrResult == null) throw new IllegalArgumentException("OCR 결과가 없습니다.");
+            if (ocrResult == null)
+                throw new IllegalArgumentException("OCR 결과가 없습니다.");
+            else
+                return recommendService.recommend(ocrResult);
         } catch (Exception e) {
             e.printStackTrace();
         }
         // 추천 로직 구현
         System.out.println(ocrResult);
         return null;
+    }
+
+    public List<FoodInfo> getFoodInfo() {
+        return foodInfoRepo.findAll();
+    }
+
+    public FoodInfo addFoodInfo(FoodInfo foodInfo) {
+        return foodInfoRepo.save(foodInfo);
+    }
+
+    public void deleteFoodInfo(Long foodInfoId) {
+        foodInfoRepo.deleteById(foodInfoId);
     }
 }
