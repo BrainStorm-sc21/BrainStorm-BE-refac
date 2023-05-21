@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class FoodServiceTest {
     FoodRepository foodRepoMock = mock(FoodRepository.class);
-    FoodService foodService = new FoodService(foodRepoMock);
+    FoodService foodService = new FoodService(foodRepoMock, null,null);
 
     @Test
     public void testGetList() {
