@@ -69,7 +69,7 @@ public class FoodController {
 
     @ResponseBody
     @PostMapping("/food/recommend")
-    public ResponseEntity<ApiResponse> recommendFood(@RequestBody OcrRequest ocrRequest) {
+    public ResponseEntity<ApiResponse> recommendFood(@ModelAttribute OcrRequest ocrRequest) {
         List<OcrResponse> result = foodService.recommend((ocrRequest));
         if (result == null) {
             ApiResponse apiResponse = new ApiResponse(400, "스마트 등록 실패", null);
