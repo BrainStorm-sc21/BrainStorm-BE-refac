@@ -31,6 +31,17 @@ public class ChatService {
         return chatRooms.get(roomId);
     }
 
+    public ChatRoom findRoomByUserId(String userId) {
+        for (ChatRoom chatRoom : chatRooms.values()) {
+            for (WebSocketSession session : chatRoom.getSessions()) {
+                if (session.getAttributes().get("userId").equals(userId)) {
+                    return chatRoom;
+                }
+            }
+        }
+        return null;
+    }
+
     public ChatRoom createRoom(String name) {
         String randomId = UUID.randomUUID().toString();
         ChatRoom chatRoom = ChatRoom.builder()
@@ -39,6 +50,10 @@ public class ChatService {
                 .build();
         chatRooms.put(randomId, chatRoom);
         return chatRoom;
+    }
+
+    public void deleteRoom(String roomId) {
+        chatRooms.remove(roomId);
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {

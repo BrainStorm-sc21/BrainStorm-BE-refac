@@ -4,7 +4,6 @@ import com.brainstrom.meokjang.food.domain.Food;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 public class FoodResponse {

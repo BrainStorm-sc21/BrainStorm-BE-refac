@@ -1,6 +1,7 @@
 package com.brainstrom.meokjang.food.controller;
 
 import com.brainstrom.meokjang.common.dto.response.ApiResponse;
+import com.brainstrom.meokjang.food.domain.FoodInfo;
 import com.brainstrom.meokjang.food.dto.request.FoodListRequest;
 import com.brainstrom.meokjang.food.dto.request.FoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodRequest;
@@ -17,7 +18,7 @@ import java.util.List;
 @RestController
 public class FoodController {
 
-    private FoodService foodService;
+    private final FoodService foodService;
 
     @Autowired
     public FoodController(FoodService foodService) {
@@ -70,12 +71,34 @@ public class FoodController {
     @ResponseBody
     @PostMapping("/food/recommend")
     public ResponseEntity<ApiResponse> recommendFood(@ModelAttribute OcrRequest ocrRequest) {
-        List<OcrResponse> result = foodService.recommend((ocrRequest));
+        OcrResponse result = foodService.recommend(ocrRequest);
         if (result == null) {
             ApiResponse apiResponse = new ApiResponse(400, "스마트 등록 실패", null);
             return ResponseEntity.ok(apiResponse);
         }
         ApiResponse apiResponse = new ApiResponse(200, "스마트 등록 성공", result);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/food/info")
+    public ResponseEntity<ApiResponse> getFoodInfo() {
+        List<FoodInfo> foodInfoList = foodService.getFoodInfo();
+        ApiResponse apiResponse = new ApiResponse(200, "보관장소/소비기한 데이터 목록 조회 성공", foodInfoList);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @ResponseBody
+    @PostMapping("/food/info")
+    public ResponseEntity<ApiResponse> addFoodInfo(@RequestBody FoodInfo foodInfo) {
+        FoodInfo info = foodService.addFoodInfo(foodInfo);
+        ApiResponse apiResponse = new ApiResponse(200, "보관장소/소비기한 데이터 추가 성공", info);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @DeleteMapping("/food/info/{foodInfoId}")
+    public ResponseEntity<ApiResponse> deleteFoodInfo(@PathVariable Long foodInfoId) {
+        foodService.deleteFoodInfo(foodInfoId);
+        ApiResponse apiResponse = new ApiResponse(200, "보관장소/소비기한 데이터 삭제 성공", null);
         return ResponseEntity.ok(apiResponse);
     }
 }

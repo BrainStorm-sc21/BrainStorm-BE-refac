@@ -20,4 +20,19 @@ public class ChatController {
     public List<ChatRoom> findAllRoom() {
         return chatService.findAllRoom();
     }
+
+    @GetMapping("/{roomId}")
+    public ChatRoom findRoomById(@PathVariable String roomId) {
+        return chatService.findRoomById(roomId);
+    }
+
+    @GetMapping("/{userId}")
+    public ChatRoom findRoomByUserId(@PathVariable String userId) {
+        return chatService.findRoomByUserId(userId);
+    }
+
+    @DeleteMapping("/{roomId}")
+    public void deleteRoom(@PathVariable String roomId) {
+        chatService.deleteRoom(roomId);
+    }
 }

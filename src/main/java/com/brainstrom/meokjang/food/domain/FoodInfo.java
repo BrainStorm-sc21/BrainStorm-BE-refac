@@ -1,7 +1,6 @@
 package com.brainstrom.meokjang.food.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,13 +18,12 @@ public class FoodInfo {
     private String infoName;
 
     @Column(name = "storage_way", nullable = false)
-    private Integer storageWay;
+    private String storageWay;
 
     @Column(name = "storage_day", nullable = false)
     private Integer storageDay;
 
-    @Builder
-    public FoodInfo(Long infoId, String infoName, Integer storageWay, Integer storageDay) {
+    public FoodInfo(Long infoId, String infoName, String storageWay, Integer storageDay) {
         this.infoId = infoId;
         this.infoName = infoName;
         this.storageWay = storageWay;
