@@ -5,6 +5,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 src/main/resources/application.yml
+src/main/resources/config
+src/main/resources/oci_api_key.pem
 
 ### STS ###
 .apt_generated
