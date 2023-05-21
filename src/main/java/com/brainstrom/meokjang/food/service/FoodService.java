@@ -1,6 +1,7 @@
 package com.brainstrom.meokjang.food.service;
 
 import com.brainstrom.meokjang.food.domain.Food;
+import com.brainstrom.meokjang.food.domain.FoodInfo;
 import com.brainstrom.meokjang.food.dto.OcrFoodDto;
 import com.brainstrom.meokjang.food.dto.request.FoodListRequest;
 import com.brainstrom.meokjang.food.dto.request.FoodDto;
@@ -8,13 +9,13 @@ import com.brainstrom.meokjang.food.dto.request.FoodRequest;
 import com.brainstrom.meokjang.food.dto.response.FoodResponse;
 import com.brainstrom.meokjang.food.dto.response.OcrResponse;
 import com.brainstrom.meokjang.food.dto.request.OcrRequest;
+import com.brainstrom.meokjang.food.repository.FoodInfoRepository;
 import com.brainstrom.meokjang.food.repository.FoodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FoodService {
     private FoodRepository foodRepo;
+    private FoodInfoRepository foodInfoRepo;
     private RecommendService recommendService;
 
     @Autowired
-    public FoodService(FoodRepository foodRepo, RecommendService recommendService) {
+    public FoodService(FoodRepository foodRepo, FoodInfoRepository foodInfoRepo, RecommendService recommendService) {
         this.foodRepo = foodRepo;
+        this.foodInfoRepo = foodInfoRepo;
         this.recommendService = recommendService;
     }
 
@@ -98,5 +101,17 @@ public class FoodService {
         // 추천 로직 구현
         System.out.println(ocrResult);
         return null;
+    }
+
+    public List<FoodInfo> getFoodInfo() {
+        return foodInfoRepo.findAll();
+    }
+
+    public FoodInfo addFoodInfo(FoodInfo foodInfo) {
+        return foodInfoRepo.save(foodInfo);
+    }
+
+    public void deleteFoodInfo(Long foodInfoId) {
+        foodInfoRepo.deleteById(foodInfoId);
     }
 }
