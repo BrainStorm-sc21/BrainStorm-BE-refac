@@ -31,7 +31,7 @@ public class DealController {
     }
 
     @PostMapping("/deal")
-    public ResponseEntity<ApiResponse> createDeal(@RequestBody DealRequest dealRequest, BindingResult result) {
+    public ResponseEntity<ApiResponse> createDeal(@ModelAttribute DealRequest dealRequest, BindingResult result) {
 
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 생성 실패", result.getAllErrors()));
