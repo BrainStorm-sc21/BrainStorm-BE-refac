@@ -23,6 +23,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'com.oracle.oci.sdk:oci-java-sdk:3.8.0'
+	implementation 'com.oracle.oci.sdk:oci-java-sdk-objectstorage:3.8.0'
 	implementation 'org.json:json:20230227'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

@@ -6,10 +6,19 @@ import com.brainstrom.meokjang.deal.dto.response.DealInfoResponse;
 import com.brainstrom.meokjang.deal.repository.DealRepository;
 import com.brainstrom.meokjang.user.domain.User;
 import com.brainstrom.meokjang.user.repository.UserRepository;
+import com.oracle.bmc.ConfigFileReader;
+import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
+import com.oracle.bmc.objectstorage.ObjectStorage;
+import com.oracle.bmc.objectstorage.ObjectStorageClient;
+import com.oracle.bmc.objectstorage.requests.PutObjectRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +28,29 @@ public class DealService {
 
     private final DealRepository dealRepository;
     private final UserRepository userRepository;
+    private final ObjectStorage objectStorage;
+    private final String ociConfigPath;
+    private final String ociProfile;
+    private final String ociNamespace;
+    private final String ociBucketName;
 
     @Autowired
-    public DealService(DealRepository dealRepository, UserRepository userRepository) {
+    public DealService(@Value("@{OCI_CONFIG_PATH}") String ociConfigPath,
+                    @Value("@{OCI_PROFILE}") String ociProfile,
+                    @Value("@{OCI_NAMESPACE}") String ociNamespace,
+                    @Value("@{OCI_BUCKET_NAME}") String ociBucketName,
+                    DealRepository dealRepository, UserRepository userRepository) throws IOException {
+        this.ociConfigPath = ociConfigPath;
+        this.ociProfile = ociProfile;
+        try {
+            ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse(ociConfigPath, ociProfile);
+            ConfigFileAuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
+            objectStorage = ObjectStorageClient.builder().region("ap-seoul-1").build(provider);
+        } catch (IOException e) {
+            throw new IOException("OCI 설정 파일을 찾을 수 없습니다.");
+        }
+        this.ociNamespace = ociNamespace;
+        this.ociBucketName = ociBucketName;
         this.dealRepository = dealRepository;
         this.userRepository = userRepository;
     }
@@ -30,6 +59,7 @@ public class DealService {
         try {
             User user = userRepository.findByUserId(dealRequest.getUserId())
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+            String[] imageList = uploadImage(dealRequest);
             Deal deal = Deal.builder()
                     .userId(dealRequest.getUserId())
                     .dealType(dealRequest.getDealType())
@@ -38,15 +68,44 @@ public class DealService {
                     .location(user.getLocation())
                     .latitude(user.getLatitude())
                     .longitude(user.getLongitude())
-                    .image1(dealRequest.getImage1())
-                    .image2(dealRequest.getImage2())
-                    .image3(dealRequest.getImage3())
-                    .image4(dealRequest.getImage4())
+                    .image1(imageList[0])
+                    .image2(imageList[1])
+                    .image3(imageList[2])
+                    .image4(imageList[3])
                     .build();
             dealRepository.save(deal);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    private String[] uploadImage(DealRequest dealRequest) {
+        String[] imageList = new String[4];
+        if (dealRequest.getImage1() != null) {
+            imageList[0] = upload(dealRequest.getImage1());
+        }
+        if (dealRequest.getImage2() != null) {
+            imageList[1] = upload(dealRequest.getImage2());
+        }
+        if (dealRequest.getImage3() != null) {
+            imageList[2] = upload(dealRequest.getImage3());
+        }
+        if (dealRequest.getImage4() != null) {
+            imageList[3] = upload(dealRequest.getImage4());
+        }
+        return imageList;
+    }
+
+    private String upload(MultipartFile image) {
+        String fileName = image.getOriginalFilename();
+        PutObjectRequest por = PutObjectRequest.builder()
+                .bucketName(ociBucketName)
+                .namespaceName(ociNamespace)
+                .objectName(fileName)
+                .contentType(image.getContentType())
+                .build();
+        objectStorage.putObject(por);
+        return fileName;
     }
 
     public List<DealInfoResponse> aroundDealList(Long userId) {
