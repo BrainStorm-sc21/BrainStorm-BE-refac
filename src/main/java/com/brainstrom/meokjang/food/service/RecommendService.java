@@ -18,11 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 public class RecommendService {
@@ -206,20 +202,25 @@ public class RecommendService {
             Map<Integer, Map<Integer, Integer>> recommend = new HashMap<>();
             for (Map.Entry<Integer, OcrFoodDto> ocrFood : ocrResult.entrySet()) {
                 Integer idx = ocrFood.getKey();
-                String[] arr = ocrFood.getValue().getFoodName().split(" ");
-                String foodName = arr[arr.length - 1];
-                List<FoodInfo> foodInfos = foodInfoRepository.findByInfoName(foodName);
-                if (foodInfos.size() == 0) {
-                    continue;
+                List<String> foodName = Arrays.asList(ocrFood.getValue().getFoodName().split(" "));
+                Collections.reverse(foodName);
+                List<FoodInfo> foodInfos = new ArrayList<>();
+                for (String name : foodName) {
+                    foodInfos.addAll(foodInfoRepository.findByInfoName(name));
+                    if (foodInfos.size() != 0) {
+                        break;
+                    }
                 }
                 Map<Integer, Integer> foodInfo = new HashMap<>();
+                if (foodInfos.size() == 0)
+                    continue;
                 for (FoodInfo info : foodInfos) {
-                    Integer storageWay;
+                    int storageWay;
                     if (info.getStorageWay().equals("냉장")) {
                         storageWay = 0;
                     } else if (info.getStorageWay().equals("냉동")) {
                         storageWay = 1;
-                    } else {
+                    } else  {
                         storageWay = 2;
                     }
                     foodInfo.put(storageWay, info.getStorageDay());
