@@ -225,7 +225,15 @@ public class RecommendService {
                     }
                     foodInfo.put(storageWay, info.getStorageDay());
                 }
+                for (int i = 0; i < 3; i++) {
+                    if (!foodInfo.containsKey(i)) {
+                        foodInfo.put(i, 0);
+                    }
+                }
                 recommend.put(idx, foodInfo);
+            }
+            if (recommend.size() == 0) {
+                recommend = null;
             }
             return new OcrResponse(ocrResult, recommend);
         } catch (Exception e) {
