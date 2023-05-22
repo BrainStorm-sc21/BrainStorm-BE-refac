@@ -93,12 +93,12 @@ public class FoodService {
             ocrResult = recommendService.doOcr(ocrRequest);
             if (ocrResult == null)
                 throw new IllegalArgumentException("OCR 결과가 없습니다.");
-            else
+            else {
                 return recommendService.recommend(ocrResult);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // 추천 로직 구현
         System.out.println(ocrResult);
         return null;
     }
