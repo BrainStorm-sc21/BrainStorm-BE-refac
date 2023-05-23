@@ -246,13 +246,13 @@ public class DealService {
 
     private Double getDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
         final int R = 6371;
-        Double dLat = Math.toRadians(lat2 - lat1);
-        Double dLon = Math.toRadians(lon2 - lon1);
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
         lat1 = Math.toRadians(lat1);
         lat2 = Math.toRadians(lat2);
 
-        Double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c * 1000;
     }
 }
