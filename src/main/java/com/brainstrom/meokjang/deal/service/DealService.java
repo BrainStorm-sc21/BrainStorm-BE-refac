@@ -10,7 +10,6 @@ import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.AuthenticationDetailsProvider;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
-import com.oracle.bmc.core.responses.DeleteImageResponse;
 import com.oracle.bmc.objectstorage.ObjectStorage;
 import com.oracle.bmc.objectstorage.ObjectStorageClient;
 import com.oracle.bmc.objectstorage.requests.*;
@@ -237,8 +236,9 @@ public class DealService {
 
     public void deleteDeal(Long dealId) {
         try {
-            String[] imageList = dealRepository.findById(dealId)
-                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다.")).getImageList();
+            Deal deal = dealRepository.findById(dealId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
+            String[] imageList = deal.getImageList();
             for (String image : imageList) {
                 if (image != null) {
                     DeleteObjectRequest dor = DeleteObjectRequest.builder()
@@ -249,6 +249,7 @@ public class DealService {
                     objectStorage.deleteObject(dor);
                 }
             }
+            deal.delete();
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }

@@ -94,8 +94,11 @@ public class Deal {
         this.isClosed = true;
     }
 
+    public void delete() {
+        this.isDeleted = true;
+    }
+
     public String[] getImageList() {
         return new String[]{image1, image2, image3, image4};
     }
-
 }
