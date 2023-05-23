@@ -94,4 +94,16 @@ public class DealController {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "내 거래 목록 조회 실패", e.getMessage()));
         }
     }
+
+    @PutMapping("/deal/{dealId}/complete")
+    public ResponseEntity<ApiResponse> completeDeal(@PathVariable Long dealId) {
+
+        try {
+            dealService.completeDeal(dealId);
+            ApiResponse res = new ApiResponse(200, "거래 완료 성공", null);
+            return ResponseEntity.ok(res);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 완료 실패", e.getMessage()));
+        }
+    }
 }

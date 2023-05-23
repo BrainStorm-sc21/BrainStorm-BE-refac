@@ -90,7 +90,12 @@ public class Deal {
         this.image4 = imageList[3];
     }
 
+    public void complete() {
+        this.isClosed = true;
+    }
+
     public String[] getImageList() {
         return new String[]{image1, image2, image3, image4};
     }
+
 }

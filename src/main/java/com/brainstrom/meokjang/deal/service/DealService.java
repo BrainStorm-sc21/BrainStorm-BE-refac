@@ -293,4 +293,14 @@ public class DealService {
             throw new IllegalStateException(e.getMessage());
         }
     }
+
+    public void completeDeal(Long dealId) {
+        try {
+            Deal deal = dealRepository.findById(dealId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
+            deal.complete();
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
 }
