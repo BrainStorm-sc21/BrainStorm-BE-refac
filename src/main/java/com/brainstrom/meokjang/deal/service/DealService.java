@@ -265,4 +265,32 @@ public class DealService {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c * 1000;
     }
+
+    public List<DealInfoResponse> myDealList(Long userId) {
+        try {
+            List<Deal> deals = dealRepository.findByUserId(userId);
+            List<DealInfoResponse> dealLists = new ArrayList<>();
+            for (Deal d : deals) {
+                DealInfoResponse res = DealInfoResponse.builder()
+                        .dealId(d.getDealId())
+                        .userId(d.getUserId())
+                        .dealType(d.getDealType())
+                        .dealName(d.getDealName())
+                        .dealContent(d.getDealContent())
+                        .latitude(d.getLatitude())
+                        .longitude(d.getLongitude())
+                        .distance(null)
+                        .image1(d.getImage1())
+                        .image2(d.getImage2())
+                        .image3(d.getImage3())
+                        .image4(d.getImage4())
+                        .createdAt(d.getCreatedAt())
+                        .build();
+                dealLists.add(res);
+            }
+            return dealLists;
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
 }
