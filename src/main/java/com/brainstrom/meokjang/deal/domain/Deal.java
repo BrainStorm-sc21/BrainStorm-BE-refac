@@ -90,4 +90,8 @@ public class Deal {
         this.image3 = imageList[2];
         this.image4 = imageList[3];
     }
+
+    public String[] getImageList() {
+        return new String[]{image1, image2, image3, image4};
+    }
 }

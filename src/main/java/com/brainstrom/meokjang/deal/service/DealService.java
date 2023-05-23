@@ -10,11 +10,10 @@ import com.oracle.bmc.ConfigFileReader;
 import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.AuthenticationDetailsProvider;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
+import com.oracle.bmc.core.responses.DeleteImageResponse;
 import com.oracle.bmc.objectstorage.ObjectStorage;
 import com.oracle.bmc.objectstorage.ObjectStorageClient;
-import com.oracle.bmc.objectstorage.requests.GetBucketRequest;
-import com.oracle.bmc.objectstorage.requests.GetNamespaceRequest;
-import com.oracle.bmc.objectstorage.requests.PutObjectRequest;
+import com.oracle.bmc.objectstorage.requests.*;
 import com.oracle.bmc.objectstorage.responses.GetBucketResponse;
 import com.oracle.bmc.objectstorage.responses.GetNamespaceResponse;
 import com.oracle.bmc.objectstorage.transfer.UploadConfiguration;
@@ -238,7 +237,18 @@ public class DealService {
 
     public void deleteDeal(Long dealId) {
         try {
-            dealRepository.deleteById(dealId);
+            String[] imageList = dealRepository.findById(dealId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다.")).getImageList();
+            for (String image : imageList) {
+                if (image != null) {
+                    DeleteObjectRequest dor = DeleteObjectRequest.builder()
+                            .bucketName(ociBucketName)
+                            .namespaceName(ociNamespace)
+                            .objectName(image)
+                            .build();
+                    objectStorage.deleteObject(dor);
+                }
+            }
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
