@@ -141,6 +141,9 @@ public class DealService {
                 .opcMeta(null)
                 .build();
         File file = convertMultipartFileToFile(image);
+        if (file == null) {
+            return null;
+        }
         image.transferTo(file);
         UploadManager.UploadRequest uploadDetails =
                 UploadManager.UploadRequest.builder(file)
@@ -153,6 +156,9 @@ public class DealService {
     }
 
     private File convertMultipartFileToFile(MultipartFile image) {
+        if (image.isEmpty() || image == null) {
+            return null;
+        }
         File file = new File(image.getOriginalFilename());
         try {
             FileOutputStream fos = new FileOutputStream(file);
