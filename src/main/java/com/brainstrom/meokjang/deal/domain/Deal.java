@@ -1,6 +1,5 @@
 package com.brainstrom.meokjang.deal.domain;
 
-import com.brainstrom.meokjang.deal.dto.request.DealRequest;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -89,5 +88,17 @@ public class Deal {
         this.image2 = imageList[1];
         this.image3 = imageList[2];
         this.image4 = imageList[3];
+    }
+
+    public void complete() {
+        this.isClosed = true;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+    public String[] getImageList() {
+        return new String[]{image1, image2, image3, image4};
     }
 }

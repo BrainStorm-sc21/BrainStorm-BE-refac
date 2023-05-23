@@ -12,9 +12,7 @@ import com.oracle.bmc.auth.AuthenticationDetailsProvider;
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
 import com.oracle.bmc.objectstorage.ObjectStorage;
 import com.oracle.bmc.objectstorage.ObjectStorageClient;
-import com.oracle.bmc.objectstorage.requests.GetBucketRequest;
-import com.oracle.bmc.objectstorage.requests.GetNamespaceRequest;
-import com.oracle.bmc.objectstorage.requests.PutObjectRequest;
+import com.oracle.bmc.objectstorage.requests.*;
 import com.oracle.bmc.objectstorage.responses.GetBucketResponse;
 import com.oracle.bmc.objectstorage.responses.GetNamespaceResponse;
 import com.oracle.bmc.objectstorage.transfer.UploadConfiguration;
@@ -141,6 +139,9 @@ public class DealService {
                 .opcMeta(null)
                 .build();
         File file = convertMultipartFileToFile(image);
+        if (file == null) {
+            return null;
+        }
         image.transferTo(file);
         UploadManager.UploadRequest uploadDetails =
                 UploadManager.UploadRequest.builder(file)
@@ -153,6 +154,9 @@ public class DealService {
     }
 
     private File convertMultipartFileToFile(MultipartFile image) {
+        if (image.isEmpty() || image == null) {
+            return null;
+        }
         File file = new File(image.getOriginalFilename());
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -168,9 +172,12 @@ public class DealService {
         try {
             User user = userRepository.findByUserId(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
-            List<Deal> deals = dealRepository.findAroundDealList(user.getLatitude(), user.getLongitude());
+            List<Deal> deals = dealRepository.findAroundDealList(user.getUserId(), user.getLatitude(), user.getLongitude());
             List<DealInfoResponse> dealLists = new ArrayList<>();
             for (Deal d : deals) {
+                if (d.getIsDeleted() == true) {
+                    continue;
+                }
                 Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());
                 DealInfoResponse res = DealInfoResponse.builder()
                         .dealId(d.getDealId())
@@ -232,7 +239,20 @@ public class DealService {
 
     public void deleteDeal(Long dealId) {
         try {
-            dealRepository.deleteById(dealId);
+            Deal deal = dealRepository.findById(dealId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
+            String[] imageList = deal.getImageList();
+            for (String image : imageList) {
+                if (image != null) {
+                    DeleteObjectRequest dor = DeleteObjectRequest.builder()
+                            .bucketName(ociBucketName)
+                            .namespaceName(ociNamespace)
+                            .objectName(image)
+                            .build();
+                    objectStorage.deleteObject(dor);
+                }
+            }
+            deal.delete();
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
@@ -240,13 +260,51 @@ public class DealService {
 
     private Double getDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
         final int R = 6371;
-        Double dLat = Math.toRadians(lat2 - lat1);
-        Double dLon = Math.toRadians(lon2 - lon1);
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
         lat1 = Math.toRadians(lat1);
         lat2 = Math.toRadians(lat2);
 
-        Double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c * 1000;
+    }
+
+    public List<DealInfoResponse> myDealList(Long userId) {
+        try {
+            List<Deal> deals = dealRepository.findByUserId(userId);
+            List<DealInfoResponse> dealLists = new ArrayList<>();
+            for (Deal d : deals) {
+                DealInfoResponse res = DealInfoResponse.builder()
+                        .dealId(d.getDealId())
+                        .userId(d.getUserId())
+                        .dealType(d.getDealType())
+                        .dealName(d.getDealName())
+                        .dealContent(d.getDealContent())
+                        .latitude(d.getLatitude())
+                        .longitude(d.getLongitude())
+                        .distance(null)
+                        .image1(d.getImage1())
+                        .image2(d.getImage2())
+                        .image3(d.getImage3())
+                        .image4(d.getImage4())
+                        .createdAt(d.getCreatedAt())
+                        .build();
+                dealLists.add(res);
+            }
+            return dealLists;
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
+
+    public void completeDeal(Long dealId) {
+        try {
+            Deal deal = dealRepository.findById(dealId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
+            deal.complete();
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
     }
 }
