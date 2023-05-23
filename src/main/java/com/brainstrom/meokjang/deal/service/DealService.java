@@ -168,7 +168,7 @@ public class DealService {
         try {
             User user = userRepository.findByUserId(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
-            List<Deal> deals = dealRepository.findAroundDealList(user.getLatitude(), user.getLongitude());
+            List<Deal> deals = dealRepository.findAroundDealList(user.getUserId(), user.getLatitude(), user.getLongitude());
             List<DealInfoResponse> dealLists = new ArrayList<>();
             for (Deal d : deals) {
                 Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());

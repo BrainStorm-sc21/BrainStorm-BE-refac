@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DealRepository extends JpaRepository<Deal, Long> {
-    @Query(value = "SELECT * FROM Deal d WHERE (6371000 * acos(cos(radians(:latitude)) * cos(radians(d.latitude)) * cos(radians(d.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(d.latitude)))) <= 1000", nativeQuery = true)
-    List<Deal> findAroundDealList(@Param("latitude") Double latitude, @Param("longitude") Double longitude);
+    @Query(value = "SELECT * FROM Deal d WHERE d.user_id != :userId AND (6371000 * acos(cos(radians(:latitude)) * cos(radians(d.latitude)) * cos(radians(d.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(d.latitude)))) <= 1000", nativeQuery = true)
+    List<Deal> findAroundDealList(@Param("userId") Long userId, @Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
 }
