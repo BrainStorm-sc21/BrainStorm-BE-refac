@@ -175,6 +175,9 @@ public class DealService {
             List<Deal> deals = dealRepository.findAroundDealList(user.getUserId(), user.getLatitude(), user.getLongitude());
             List<DealInfoResponse> dealLists = new ArrayList<>();
             for (Deal d : deals) {
+                if (d.getIsDeleted() == true) {
+                    continue;
+                }
                 Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());
                 DealInfoResponse res = DealInfoResponse.builder()
                         .dealId(d.getDealId())
