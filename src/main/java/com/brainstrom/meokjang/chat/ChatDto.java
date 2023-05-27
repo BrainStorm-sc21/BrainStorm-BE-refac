@@ -1,11 +1,11 @@
 package com.brainstrom.meokjang.chat;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-public class ChatMessage {
+@Data
+@NoArgsConstructor
+public class ChatDto {
     public enum MessageType{
         ENTER, TALK
     }
