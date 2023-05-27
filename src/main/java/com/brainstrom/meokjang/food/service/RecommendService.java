@@ -9,9 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -118,7 +116,9 @@ public class RecommendService {
         } else {
             ocrResult = generalToList(response, ocrResult);
         }
-
+        if (ocrResult.size() == 0) {
+            return null;
+        }
         return ocrResult;
     }
 
@@ -225,7 +225,15 @@ public class RecommendService {
                     }
                     foodInfo.put(storageWay, info.getStorageDay());
                 }
+                for (int i = 0; i < 3; i++) {
+                    if (!foodInfo.containsKey(i)) {
+                        foodInfo.put(i, 0);
+                    }
+                }
                 recommend.put(idx, foodInfo);
+            }
+            if (recommend.size() == 0) {
+                recommend = null;
             }
             return new OcrResponse(ocrResult, recommend);
         } catch (Exception e) {
