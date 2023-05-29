@@ -99,6 +99,7 @@ public class DealService {
                     .image2(imageList[1])
                     .image3(imageList[2])
                     .image4(imageList[3])
+                    .isDeleted(false)
                     .build();
             dealRepository.save(deal);
         } catch (IllegalStateException | IOException e) {
