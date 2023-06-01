@@ -27,18 +27,18 @@ BrainStorm 팀의 "집에서 밥 먹장!" 백엔드 레포입니다.
 <img width="100%" src="https://github.com/BrainStorm-sc21/BrainStorm-BE/assets/101620252/dd8de71d-af29-44d2-8e7d-a5c3d7254e87">
 
 # 패키지 구조
-### 각 기능별로 계층 세부 분류
-common: 프로젝트 공통 형식 관리
-user: 유저 관리
-food: 식료품 관리
-deal: 거래 관리
-chat: 채팅 기능
-notice: 알림 기능
-  controller: api 호출 및 반환 형식 통일
-  service: 서비스 로직 구현
-  domain: 엔티티 객체
-  repository: 데이터베이스 접근 dao
-  dto: 데이터 전달 객체
+### 기능별로 Controller, Service, Repository, Domain, DTO를하여 각각 사용
+- common: 프로젝트 공통 내용 관리
+- user: 유저 관리
+- food: 식료품 관리
+- deal: 거래 관리
+- chat: 채팅 기능
+- notice: 알림 기능
+  - controller: MVC의 컨트롤러 역할
+  - service: 비지니스 로직 구현
+  - repository: 데이터베이스 접근(dao)
+  - domain: 엔티티 객체
+  - dto: 데이터 전달 객체
 
 # 코드 컨벤션
 
