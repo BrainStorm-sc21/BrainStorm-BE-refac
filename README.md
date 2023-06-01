@@ -15,12 +15,16 @@
 
 <br/>
 
-
-이 프로젝트는 아주대학교 SW캡스톤디자인 과목의 일환으로, 5인으로 구성된 BrainStorm 팀이 2023년 3월부터 6월까지 진행하였습니다.
-
 # BrainStorm-BE
 
 BrainStorm 팀의 "집에서 밥 먹장!" 백엔드 레포입니다.
+
+### 팀원 소개
+
+|이름|역할|email|github|
+|---|---|---|---|
+|정현지|백엔드 개발|wgw777@ajou.ac.kr|https://github.com/Hyeonji-Jung|
+|이강민|백엔드 개발|dlrkdals421@ajou.ac.kr|https://github.com/Kangmin909|
 
 # 사용 라이브러리 및 개발 환경(Spring Boot)
 
