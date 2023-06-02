@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,8 +28,6 @@ public class UserService {
     }
 
     public UserInfoResponse updateUserInfo(Long userId, String userName) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
         int result = userRepository.updateUserById(userId, userName);
         if (result != 1) {
             throw new IllegalStateException("유저 정보 수정에 실패하였습니다.");
