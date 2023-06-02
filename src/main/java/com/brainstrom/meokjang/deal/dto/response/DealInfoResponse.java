@@ -21,10 +21,11 @@ public class DealInfoResponse {
     private String image2;
     private String image3;
     private String image4;
+    private Boolean isClosed;
     private LocalDateTime createdAt;
 
     public DealInfoResponse(Long dealId, Long userId, Integer dealType,String dealName, String dealContent, Double latitude, Double longitude,
-                            Double distance, String image1, String image2, String image3, String image4, LocalDateTime createdAt) {
+                            Double distance, String image1, String image2, String image3, String image4, Boolean isClosed, LocalDateTime createdAt) {
         this.dealId = dealId;
         this.userId = userId;
         this.dealType = dealType;
@@ -37,6 +38,7 @@ public class DealInfoResponse {
         this.image2 = image2;
         this.image3 = image3;
         this.image4 = image4;
+        this.isClosed = isClosed;
         this.createdAt = createdAt;
     }
 }
