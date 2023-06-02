@@ -29,6 +29,7 @@ public class RecipeController {
             ApiResponse apiResponse = new ApiResponse(200, "레시피 조회 성공", recipeService.getRecipe(foodList));
             return ResponseEntity.ok(apiResponse);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(new ApiResponse(400, "레시피 조회 실패", null));
         }
     }
