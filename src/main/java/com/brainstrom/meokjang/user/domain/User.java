@@ -19,19 +19,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "user_name", length = 6, nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(name = "phone_number", length = 11, unique = true)
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
-    @Column(name = "sns_type", length = 5)
+    @Column(name = "sns_type")
     private String snsType;
 
-    @Column(name = "sns_key", length = 100, unique = true)
+    @Column(name = "sns_key", unique = true)
     private String snsKey;
 
-    @Column(name = "location", length = 40, nullable = false)
+    @Column(name = "location", nullable = false)
     private String location;
 
     @Column(name = "latitude", nullable = false)
