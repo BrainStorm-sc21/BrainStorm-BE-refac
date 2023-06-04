@@ -2,9 +2,9 @@ name: CI_CD
 run-name: CI_CD workflow
 on:
   push:
-    branches: [ main ]
+    branches: [ testp ]
   pull_request:
-    branches: [ main ]
+    branches: [ testp ]
 
 jobs:
   deploy-image:
@@ -21,6 +21,10 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: find out directory structure
+        uses: pwd \
+              ls
 
       - name: Create resources directory
         run: mkdir -p ./src/main/resources
