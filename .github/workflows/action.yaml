@@ -2,9 +2,9 @@ name: CI_CD
 run-name: CI_CD workflow
 on:
   push:
-    branches: [ testp ]
+    branches: [ main ]
   pull_request:
-    branches: [ testp ]
+    branches: [ main ]
 
 jobs:
   deploy-image:
