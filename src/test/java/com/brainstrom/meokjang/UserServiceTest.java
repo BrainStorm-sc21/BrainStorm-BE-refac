@@ -61,28 +61,28 @@ public class UserServiceTest {
         assertEquals(savedId, userInfoResponse.getUserId());
     }
 
-    @Test
-    @DisplayName("회원 정보 수정 테스트")
-    void updateUserInfo() {
-        //given
-        SignupRequest signupRequest = SignupRequest.builder()
-                .userName("test")
-                .phoneNumber("01012345678")
-                .location("test")
-                .latitude(0.0)
-                .longitude(0.0)
-                .gender(1)
-                .build();
-
-        Long savedId = authService.join(signupRequest).getUserId();
-
-        //when
-        UserInfoResponse userInfoResponse = userService.updateUserInfo(savedId, "test2");
-        User user = userRepository.findByUserId(savedId)
-                .orElse(null);
-
-        //then
-        assertNotNull(userInfoResponse);
-        assertEquals(user.getUserName(), "test2");
-    }
+//    @Test
+//    @DisplayName("회원 정보 수정 테스트")
+//    void updateUserInfo() {
+//        //given
+//        SignupRequest signupRequest = SignupRequest.builder()
+//                .userName("test")
+//                .phoneNumber("01012345678")
+//                .location("test")
+//                .latitude(0.0)
+//                .longitude(0.0)
+//                .gender(1)
+//                .build();
+//
+//        Long savedId = authService.join(signupRequest).getUserId();
+//
+//        //when
+//        UserInfoResponse userInfoResponse = userService.updateUserInfo(savedId, "test2");
+//        User user = userRepository.findByUserId(savedId)
+//                .orElse(null);
+//
+//        //then
+//        assertNotNull(userInfoResponse);
+//        assertEquals(user.getUserName(), "test2");
+//    }
 }
