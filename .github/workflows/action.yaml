@@ -22,17 +22,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Create resources directory
+      - name: Create resource directory
         run: mkdir -p ./src/main/resources
 
       - name: Set up application.yml
         run: echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > ./src/main/resources/application.yml
 
+      - name: Set up config
+        run: echo "${{ secrets.CONFIG_CONTENT }}" > ./src/main/resources/config
+
+      - name: Set up oci_api_key.pem
+        run: echo "${{ secrets.OCI_API_KEY_CONTENT }}" > ./src/main/resources/oci_api_key.pem
+
       - name: Set ENV
         run: echo "TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
 
       - name: Build and Push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: dlrkdals909/meokjang:${{ env.TIME }}
+        run: |
+          docker build -t dlrkdals909/meokjang:${{ env.TIME }} .
+          docker push dlrkdals909/meokjang:${{ env.TIME }}
