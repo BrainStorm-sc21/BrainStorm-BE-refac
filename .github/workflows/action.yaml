@@ -22,15 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: find out directory structure
-        run: pwd
-
-      - name: Create resources directory
-        run: mkdir -p ./src/main/resources
-
-      - name: find out directory structure
-        run: ls ./src/main
-
       - name: Set up application.yml
         run: echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > ./src/main/resources/application.yml
 
@@ -38,7 +29,12 @@ jobs:
         run: echo "TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
 
       - name: Build and Push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: dlrkdals909/meokjang:${{ env.TIME }}
+        run: |
+          docker build -t dlrkdals909/meokjang:${{ env.TIME }} .
+          docker push dlrkdals909/meokjang:${{ env.TIME }}
+
+#      - name: Build and Push
+#        uses: docker/build-push-action@v4
+#        with:
+#          push: true
+#          tags: dlrkdals909/meokjang:${{ env.TIME }}
