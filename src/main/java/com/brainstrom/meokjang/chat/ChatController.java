@@ -1,38 +1,33 @@
 package com.brainstrom.meokjang.chat;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
+@Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatController {
-    private final ChatService chatService;
+
+    private final ChatService service;
 
     @PostMapping
-    public ChatRoom createRoom(@RequestBody String name) {
-        return chatService.createRoom(name);
+    public ChatRoom createRoom(@RequestParam String name){
+        return service.createRoom(name);
     }
 
     @GetMapping
-    public List<ChatRoom> findAllRoom() {
-        return chatService.findAllRoom();
+    public List<ChatRoom> findAllRooms(){
+        return service.findAllRoom();
     }
 
     @GetMapping("/{roomId}")
-    public ChatRoom findRoomById(@PathVariable String roomId) {
-        return chatService.findRoomById(roomId);
+    public ChatRoom findRoomById(@PathVariable String roomId){
+        return service.findRoomById(roomId);
     }
 
-    @GetMapping("/{userId}")
-    public ChatRoom findRoomByUserId(@PathVariable String userId) {
-        return chatService.findRoomByUserId(userId);
-    }
 
-    @DeleteMapping("/{roomId}")
-    public void deleteRoom(@PathVariable String roomId) {
-        chatService.deleteRoom(roomId);
-    }
 }

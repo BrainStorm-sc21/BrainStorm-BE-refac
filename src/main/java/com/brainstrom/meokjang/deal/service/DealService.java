@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -99,6 +100,7 @@ public class DealService {
                     .image2(imageList[1])
                     .image3(imageList[2])
                     .image4(imageList[3])
+                    .isDeleted(false)
                     .build();
             dealRepository.save(deal);
         } catch (IllegalStateException | IOException e) {
@@ -154,10 +156,10 @@ public class DealService {
     }
 
     private File convertMultipartFileToFile(MultipartFile image) {
-        if (image.isEmpty() || image == null) {
+        if (image.isEmpty()) {
             return null;
         }
-        File file = new File(image.getOriginalFilename());
+        File file = new File(Objects.requireNonNull(image.getOriginalFilename()));
         try {
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(image.getBytes());
@@ -192,6 +194,7 @@ public class DealService {
                         .image2(d.getImage2())
                         .image3(d.getImage3())
                         .image4(d.getImage4())
+                        .isClosed(d.getIsClosed())
                         .createdAt(d.getCreatedAt())
                         .build();
                 dealLists.add(res);
@@ -219,6 +222,7 @@ public class DealService {
                     .image2(deal.getImage2())
                     .image3(deal.getImage3())
                     .image4(deal.getImage4())
+                    .isClosed(deal.getIsClosed())
                     .createdAt(deal.getCreatedAt())
                     .build();
         } catch (IllegalStateException e) {
@@ -275,6 +279,9 @@ public class DealService {
             List<Deal> deals = dealRepository.findByUserId(userId);
             List<DealInfoResponse> dealLists = new ArrayList<>();
             for (Deal d : deals) {
+                if (d.getIsDeleted()) {
+                    continue;
+                }
                 DealInfoResponse res = DealInfoResponse.builder()
                         .dealId(d.getDealId())
                         .userId(d.getUserId())
@@ -283,11 +290,12 @@ public class DealService {
                         .dealContent(d.getDealContent())
                         .latitude(d.getLatitude())
                         .longitude(d.getLongitude())
-                        .distance(null)
+                        .distance((double) 0)
                         .image1(d.getImage1())
                         .image2(d.getImage2())
                         .image3(d.getImage3())
                         .image4(d.getImage4())
+                        .isClosed(d.getIsClosed())
                         .createdAt(d.getCreatedAt())
                         .build();
                 dealLists.add(res);
