@@ -29,10 +29,10 @@ jobs:
         run: mkdir -p ./src/main/resources
 
       - name: find out directory structure
-        run: ls
+        run: ls ./src/main
 
       - name: Set up application.yml
-        run: echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > ./src/main/resources/application.yml
+        run: echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > ./src/main/resources/application-prod.yml
 
       - name: Set ENV
         run: echo "TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
