@@ -2,14 +2,16 @@ package com.brainstrom.meokjang.common.service;
 
 import com.brainstrom.meokjang.common.dto.request.RecipeRequest;
 import com.brainstrom.meokjang.common.dto.response.RecipeResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class RecipeService {
@@ -19,37 +21,54 @@ public class RecipeService {
     private final RestTemplate restTemplate;
 
     @Autowired
-    public RecipeService(@Value("${KOGPT_API_KEY}") String apiKey,
-                         @Value("${KOGPT_API_PROMPT}") String apiPrompt) {
+    public RecipeService(@Value("${OPENAI_API_KEY}") String apiKey,
+                         @Value("${OPENAI_API_PROMPT}") String apiPrompt) {
         this.apiKey = apiKey;
         this.apiPrompt = apiPrompt;
         this.restTemplate = new RestTemplate();
     }
 
-    public RecipeResponse getRecipe(RecipeRequest req) {
+    public RecipeResponse getRecipe(RecipeRequest req) throws JsonProcessingException {
         if (req.getFoodList().size() == 0) {
             throw new IllegalStateException("식재료를 선택하지 않았습니다.");
         }
+        String url = "https://api.openai.com/v1/chat/completions";
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json; charset=utf-8");
-        headers.set("Authorization", "KakaoAK " + apiKey);
+        headers.set("Authorization", "Bearer " + apiKey);
 
-        Map<String, Object> reqBody = new HashMap<>();
-        reqBody.put("prompt", apiPrompt + req.getFoodList().toString());
-        reqBody.put("max_tokens", 200);
-        reqBody.put("temperature", 0.3);
-        reqBody.put("top_p", 0.3);
-        reqBody.put("n", 1);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        HttpEntity<Object> entity = new HttpEntity<>(reqBody, headers);
-        ResponseEntity<String> res = restTemplate.postForEntity("https://api.kakaobrain.com/v1/inference/kogpt/generation", entity, String.class);
+        ArrayNode messagesNode = objectMapper.createArrayNode();
+        ObjectNode systemMessageNode = objectMapper.createObjectNode()
+                .put("role", "system")
+                .put("content", apiPrompt);
+        messagesNode.add(systemMessageNode);
 
-        HttpStatusCode statusCode = res.getStatusCode();
-        if (statusCode != HttpStatus.OK) {
-            throw new IllegalStateException("API 호출에 실패했습니다.");
+        for (String food : req.getFoodList()) {
+            ObjectNode userMessageNode = objectMapper.createObjectNode()
+                    .put("role", "user")
+                    .put("content", food);
+            messagesNode.add(userMessageNode);
         }
 
-        System.out.println(res.getBody());
-        return new RecipeResponse(res.getBody());
+        ObjectNode payload = objectMapper.createObjectNode()
+                .put("model", "davinci")
+                .set("prompt", messagesNode)
+                .put("max_tokens", 100)
+                .put("temperature", 0.7)
+                .put("top_p", 0.5)
+                .put("frequency_penalty", 0.5);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(objectMapper.writeValueAsString(payload), headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        if (!responseEntity.getStatusCode().is2xxSuccessful())
+            throw new IllegalStateException("레시피 조회에 실패했습니다.");
+
+        JsonNode responseBody = objectMapper.readTree(responseEntity.getBody());
+        String responseText = responseBody.path("choices").path(0).path("text").asText().trim();
+        return new RecipeResponse(responseText);
     }
 }
