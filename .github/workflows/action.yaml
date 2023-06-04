@@ -23,11 +23,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: find out directory structure
-        uses: pwd \
-              ls
+        run: pwd
 
       - name: Create resources directory
         run: mkdir -p ./src/main/resources
+
+      - name: find out directory structure
+        run: ls
 
       - name: Set up application.yml
         run: echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > ./src/main/resources/application.yml
