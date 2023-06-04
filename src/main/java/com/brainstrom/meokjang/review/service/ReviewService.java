@@ -57,6 +57,7 @@ public class ReviewService {
 //                    .reviewContent(reviewRequest.getReviewContent())
 //                    .build();
             reviewRepository.save(review);
+            updateReliability(reviewTo.getUserId(), reviewRequest.getRating());
         }
     }
 
@@ -66,5 +67,13 @@ public class ReviewService {
                 "reviewFrom", reviewRepository.findAllByReviewFrom(user.getUserId()),
                 "reviewTo", reviewRepository.findAllByReviewTo(user.getUserId())
         );
+    }
+
+    public void updateReliability(Long reviewTo, Float rating) {
+        User user = userRepository.findById(reviewTo).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+        int result = userRepository.updateReliabilityById(reviewTo, user.getReliability() + rating);
+        if (result != 1) {
+            throw new IllegalStateException("신뢰도 업데이트에 실패하였습니다.");
+        }
     }
 }

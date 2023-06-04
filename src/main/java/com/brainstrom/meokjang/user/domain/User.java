@@ -68,8 +68,4 @@ public class User {
         this.reliability = reliability;
         this.stopUntil = stopUntil;
     }
-
-    public void changeUserName(String userName) {
-        this.userName = userName;
-    }
 }
