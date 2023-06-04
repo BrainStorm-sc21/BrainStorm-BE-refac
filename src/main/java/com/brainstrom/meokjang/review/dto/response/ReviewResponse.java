@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 @Getter
 public class ReviewResponse {
 
-    private Long reviewId;
-    private Long reviewFrom;
-    private Long reviewTo;
-    private Long dealId;
-    private Float rating;
-    private String reviewContent;
-    private LocalDateTime createdAt;
+    private final Long reviewId;
+    private final Long reviewFrom;
+    private final Long reviewTo;
+    private final Long dealId;
+    private final Float rating;
+    private final String reviewContent;
+    private final LocalDateTime createdAt;
 
     public ReviewResponse(Long reviewId, Long reviewFrom, Long reviewTo, Long dealId, Float rating, String reviewContent, LocalDateTime createdAt) {
         this.reviewId = reviewId;
