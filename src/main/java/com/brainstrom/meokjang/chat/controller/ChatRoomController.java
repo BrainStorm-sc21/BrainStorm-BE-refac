@@ -1,36 +1,47 @@
 package com.brainstrom.meokjang.chat.controller;
 
-import com.brainstrom.meokjang.chat.dto.ChatRoomDto;
+import com.brainstrom.meokjang.chat.domain.ChatMessage;
+import com.brainstrom.meokjang.chat.domain.ChatRoom;
+import com.brainstrom.meokjang.chat.dto.ChatMessageResponse;
+import com.brainstrom.meokjang.chat.dto.ChatRoomRequest;
+import com.brainstrom.meokjang.chat.dto.ChatRoomResponse;
 import com.brainstrom.meokjang.chat.service.ChatService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
+@Slf4j
 @RequestMapping("/chat")
 public class ChatRoomController {
-    private final ChatService chatService;
+
+    private final ChatService service;
     @Autowired
-    public ChatRoomController(ChatService chatService) {
-        this.chatService = chatService;
+    public ChatRoomController(ChatService service) {
+        this.service = service;
     }
-    // 모든 채팅방 목록 반환
-    @GetMapping("/rooms")
-    @ResponseBody
-    public List<ChatRoomDto> room() {
-        return chatService.findAllRoom();
+
+    @PostMapping
+    public ChatRoomResponse createRoom(@RequestBody ChatRoomRequest chatRoomRequest){
+        return service.createRoom(chatRoomRequest);
     }
-    // 채팅방 생성
-    @PostMapping("/room")
-    @ResponseBody
-    public ChatRoomDto createRoom(@RequestBody ChatRoomDto chatRoomDto) {
-        return chatService.createRoom(chatRoomDto);
+
+    @GetMapping("/room/{userId}")
+    public List<ChatRoomResponse> findRoomByUserId(@PathVariable Long userId){
+        return service.findRoomByUserId(userId);
     }
-    // 특정 채팅방 조회
-    @GetMapping("/room/{roomId}")
-    @ResponseBody
-    public ChatRoomDto roomInfo(@PathVariable String roomId) {
-        return chatService.findById(roomId);
+
+    @GetMapping("/room")
+    public List<ChatRoomResponse> findAllRooms(){
+        return service.findAllRoom();
+    }
+
+
+    @GetMapping("/message/{roomId}")
+    public List<ChatMessageResponse> findAllMessageById(@PathVariable Long roomId){
+        return service.findAllMessageById(roomId);
     }
 }

@@ -1,39 +1,47 @@
 package com.brainstrom.meokjang.chat.dto;
 
-import com.brainstrom.meokjang.chat.domain.ChatRoom;
-import lombok.Data;
+import com.brainstrom.meokjang.chat.domain.ChatMessage;
+import com.brainstrom.meokjang.chat.service.ChatService;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.web.socket.WebSocketSession;
 
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
 @Getter
-@NoArgsConstructor
 public class ChatRoomDto {
     private String roomId;
-    private String sender;
-    private String receiver;
-    public ChatRoomDto(String sender, String receiver){
-        this.roomId = UUID.randomUUID().toString();
+    private Long sender;
+    private Long receiver;
+    private Set<WebSocketSession> sessions = new HashSet<>();
+
+    @Builder
+    public ChatRoomDto(String roomId, Long sender, Long receiver){
+        this.roomId = roomId;
         this.sender = sender;
         this.receiver = receiver;
     }
 
-    public ChatRoomDto(ChatRoom chatRoom){
-        this.roomId = chatRoom.getRoomId();
-        this.sender = chatRoom.getSender();
-        this.receiver = chatRoom.getReceiver();
+    public void handleAction(WebSocketSession session, ChatMessageDto message, ChatService service) {
+        if (message.getType().equals(ChatMessageDto.MessageType.ENTER)) {
+            System.out.println("before_session" + sessions);
+            sessions.add(session);
+            System.out.println("after_session" + sessions);
+            message.setMessage(message.getSender() + " 님이 입장하셨습니다");
+            sendMessage(message, service);
+        } else if (message.getType().equals(ChatMessageDto.MessageType.TALK)) {
+            message.setMessage(message.getMessage());
+            try {
+                sendMessage(message, service);
+                service.saveMessage(ChatMessage.toEntity(message, service.findByRoomId(message.getRoomId())));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public ChatRoom toEntity(){
-        ChatRoom chatRoomEntity = new ChatRoom();
-        chatRoomEntity.setRoomId(this.roomId);
-        chatRoomEntity.setSender(this.sender);
-        chatRoomEntity.setReceiver(this.receiver);
-
-
-        return chatRoomEntity;
+    public void sendMessage(ChatMessageDto message, ChatService service) {
+        sessions.parallelStream().forEach(session -> service.sendMessage(session, message));
     }
-
 }

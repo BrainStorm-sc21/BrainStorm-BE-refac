@@ -1,51 +1,86 @@
 package com.brainstrom.meokjang.chat.service;
 
+
+import com.brainstrom.meokjang.chat.domain.ChatMessage;
 import com.brainstrom.meokjang.chat.domain.ChatRoom;
-import com.brainstrom.meokjang.chat.dto.ChatRoomDto;
+import com.brainstrom.meokjang.chat.dto.*;
+import com.brainstrom.meokjang.chat.repository.ChatMessageRepository;
 import com.brainstrom.meokjang.chat.repository.ChatRoomRepository;
-import com.brainstrom.meokjang.food.dto.response.FoodResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+
+import java.io.IOException;
 import java.util.*;
 
-@Service
 @Slf4j
+@Data
+@Service
 public class ChatService {
-
-    private ChatRoomRepository chatRoomRepo;
+    private final ObjectMapper mapper;
+    private Map<String, ChatRoomDto> chatRooms;
+    private ChatRoomRepository chatRepo;
+    private ChatMessageRepository messageRepo;
     @Autowired
-    public ChatService(ChatRoomRepository chatRoomRepo) {
-        this.chatRoomRepo = chatRoomRepo;
+    public ChatService(ObjectMapper mapper, ChatRoomRepository chatRepo, ChatMessageRepository messageRepo) {
+        this.mapper = mapper;
+        this.chatRepo = chatRepo;
+        this.messageRepo = messageRepo;
     }
 
-    //채팅방 불러오기
-    public List<ChatRoomDto> findAllRoom() {
-        //채팅방 최근 생성 순으로 반환
-        List<ChatRoom> rooms = chatRoomRepo.findAll();
-        List<ChatRoomDto> result = rooms.stream().map(ChatRoomDto::new).toList();
-        Collections.reverse(result);
-
-        return result;
+    @PostConstruct
+    private void init() {
+        chatRooms = new LinkedHashMap<>();
     }
 
-//    public List<ChatRoomDto> findAllByUserId(Long userId) {
-//        //채팅방 최근 생성 순으로 반환
-//        List<ChatRoomDto> result = chatRoomRepo.findAllByUserId(userId);
-//        Collections.reverse(result);
-//
-//        return result;
-//    }
-
-    //채팅방 하나 불러오기
-    public ChatRoomDto findById(String roomId) {
-        ChatRoom chatRoom = chatRoomRepo.findByRoomId(roomId);
-        return new ChatRoomDto(chatRoom);
+    public List<ChatRoomResponse> findAllRoom(){
+        return chatRepo.findAll().stream().map(ChatRoomResponse::new).toList();
     }
 
-    //채팅방 생성
-    public ChatRoomDto createRoom(ChatRoomDto chatRoomDto) {
-        chatRoomRepo.save(chatRoomDto.toEntity());
-        return chatRoomDto;
+    public ChatRoom findByRoomId(String roomId){
+        return chatRepo.findByRoomId(roomId);
+    }
+
+    public ChatRoomDto findRoomById(String roomId){
+        return chatRooms.get(roomId);
+    }
+
+    public ChatRoomResponse createRoom(ChatRoomRequest chatRoomRequest) {
+        String roomId = UUID.randomUUID().toString();
+
+        ChatRoomDto roomDto = ChatRoomDto.builder()
+                .roomId(roomId)
+                .sender(chatRoomRequest.getSender())
+                .receiver(chatRoomRequest.getReceiver())
+                .build();
+
+        chatRooms.put(roomId, roomDto);
+        ChatRoom room = ChatRoom.toEntity(roomDto);
+        return new ChatRoomResponse(chatRepo.save(room));
+    }
+
+    public ChatMessage saveMessage(ChatMessage chatMessage){
+        return messageRepo.save(chatMessage);
+    }
+
+    public List<ChatMessageResponse> findAllMessageById(Long id){
+        return messageRepo.findByChatRoom_Id(id).stream().map(ChatMessageResponse::new).toList();
+    }
+
+    public List<ChatRoomResponse> findRoomByUserId(Long userId){
+        return chatRepo.findByUserId(userId).stream().map(ChatRoomResponse::new).toList();
+    }
+
+    public void sendMessage(WebSocketSession session, ChatMessageDto message) {
+        try{
+            session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }
