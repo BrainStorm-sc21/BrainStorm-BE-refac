@@ -30,7 +30,7 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private Float rating;
 
-    @Column(name = "review_content", length = 1000, nullable = false)
+    @Column(name = "review_content", length = 1000)
     private String reviewContent;
 
     @Column(name = "created_at", nullable = false, updatable = false)
