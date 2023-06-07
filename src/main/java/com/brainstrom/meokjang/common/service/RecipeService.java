@@ -41,25 +41,17 @@ public class RecipeService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ArrayNode messagesNode = objectMapper.createArrayNode();
-        ObjectNode systemMessageNode = objectMapper.createObjectNode()
-                .put("role", "system")
-                .put("content", apiPrompt);
-        messagesNode.add(systemMessageNode);
-
-        for (String food : req.getFoodList()) {
-            ObjectNode userMessageNode = objectMapper.createObjectNode()
-                    .put("role", "user")
-                    .put("content", food);
-            messagesNode.add(userMessageNode);
-        }
+        ObjectNode userMessageNode = objectMapper.createObjectNode()
+                .put("role", "user")
+                .put("content", apiPrompt + req.getFoodList().toString());
+        messagesNode.add(userMessageNode);
 
         ObjectNode payload = objectMapper.createObjectNode()
-                .put("model", "davinci")
-                .set("prompt", messagesNode)
-                .put("max_tokens", 100)
+                .put("model", "gpt-3.5-turbo")
                 .put("temperature", 0.7)
                 .put("top_p", 0.5)
-                .put("frequency_penalty", 0.5);
+                .put("frequency_penalty", 0.5)
+                .set("messages", messagesNode);
 
         HttpEntity<String> requestEntity = new HttpEntity<>(objectMapper.writeValueAsString(payload), headers);
 
@@ -68,7 +60,8 @@ public class RecipeService {
             throw new IllegalStateException("레시피 조회에 실패했습니다.");
 
         JsonNode responseBody = objectMapper.readTree(responseEntity.getBody());
-        String responseText = responseBody.path("choices").path(0).path("text").asText().trim();
+        String responseText = responseBody.path("choices").path(0).path("message").path("content").asText();
+        System.out.println(responseText);
         return new RecipeResponse(responseText);
     }
 }
