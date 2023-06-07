@@ -34,6 +34,7 @@ public class ChatRoomDto {
             try {
                 sendMessage(message, service);
                 service.saveMessage(ChatMessage.toEntity(message, service.findByRoomId(message.getRoomId())));
+                service.updateRoom(service.findByRoomId(message.getRoomId()), message.getMessage(), message.getTime());
             } catch (Exception e) {
                 e.printStackTrace();
             }

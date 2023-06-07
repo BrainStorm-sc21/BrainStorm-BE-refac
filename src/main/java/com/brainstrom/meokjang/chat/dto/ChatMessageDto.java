@@ -2,6 +2,8 @@ package com.brainstrom.meokjang.chat.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -16,4 +18,5 @@ public class ChatMessageDto {
     private String roomId;
     private Long sender;
     private String message;
+    private LocalDateTime time;
 }

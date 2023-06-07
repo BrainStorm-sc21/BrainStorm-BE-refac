@@ -4,6 +4,7 @@ import com.brainstrom.meokjang.chat.dto.ChatRoomDto;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,12 @@ public class ChatRoom {
 
     @Column
     private Long receiver;
+
+    @Column
+    private String lastMessage;
+
+    @Column
+    private LocalDateTime lastTime;
 
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> chatMessageList = new ArrayList<>();

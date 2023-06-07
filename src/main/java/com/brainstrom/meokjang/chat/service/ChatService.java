@@ -16,6 +16,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -62,6 +63,12 @@ public class ChatService {
         chatRooms.put(roomId, roomDto);
         ChatRoom room = ChatRoom.toEntity(roomDto);
         return new ChatRoomResponse(chatRepo.save(room));
+    }
+
+    public ChatRoom updateRoom(ChatRoom chatRoom, String message, LocalDateTime time){
+        chatRoom.setLastMessage(message);
+        chatRoom.setLastTime(time);
+        return chatRepo.save(chatRoom);
     }
 
     public ChatMessage saveMessage(ChatMessage chatMessage){

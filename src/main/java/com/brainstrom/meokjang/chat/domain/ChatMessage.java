@@ -28,8 +28,7 @@ public class ChatMessage {
     @Column
     private String message;
 
-    @CreationTimestamp
-    @Column(updatable = false)
+    @Column
     private LocalDateTime time;
 
     public static ChatMessage toEntity(ChatMessageDto chatMessageDTO, ChatRoom chatRoom){
@@ -37,7 +36,7 @@ public class ChatMessage {
         chatMessageEntity.setChatRoom(chatRoom);
         chatMessageEntity.setSender(chatMessageDTO.getSender());
         chatMessageEntity.setMessage(chatMessageDTO.getMessage());
-
+        chatMessageEntity.setTime(chatMessageDTO.getTime());
         return chatMessageEntity;
 
     }
