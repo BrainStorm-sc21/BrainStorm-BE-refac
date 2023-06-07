@@ -96,10 +96,10 @@ public class DealService {
                     .location(user.getLocation())
                     .latitude(user.getLatitude())
                     .longitude(user.getLongitude())
-                    .image1(imageList[0])
-                    .image2(imageList[1])
-                    .image3(imageList[2])
-                    .image4(imageList[3])
+                    .image1(imageList[0] != null ? imageList[0] : null)
+                    .image2(imageList[1] != null ? imageList[1] : null)
+                    .image3(imageList[2] != null ? imageList[2] : null)
+                    .image4(imageList[3] != null ? imageList[3] : null)
                     .isDeleted(false)
                     .build();
             dealRepository.save(deal);
