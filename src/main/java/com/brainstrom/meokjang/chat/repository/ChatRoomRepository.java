@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, String> {
     @Query(value = "select * from ChatRoom where sender = :id or receiver = :id", nativeQuery = true)
-
     List<ChatRoom> findByUserId(@Param(value = "id") Long id);
     List<ChatRoom> findAll();
     ChatRoom findByRoomId(String roomId);

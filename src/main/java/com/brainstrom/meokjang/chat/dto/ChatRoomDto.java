@@ -23,12 +23,11 @@ public class ChatRoomDto {
         this.receiver = receiver;
     }
 
-    public void handleAction(WebSocketSession session, ChatMessageDto message, ChatService service) {
+    public void handleAction(WebSocketSession beforeSession, WebSocketSession session, ChatMessageDto message, ChatService service) {
         if (message.getType().equals(ChatMessageDto.MessageType.ENTER)) {
+            sessions.remove(beforeSession);
             sessions.add(session);
             System.out.println("session" + sessions);
-            message.setMessage(message.getSender() + " 님이 입장하셨습니다");
-            sendMessage(message, service);
         } else if (message.getType().equals(ChatMessageDto.MessageType.TALK)) {
             message.setMessage(message.getMessage());
             try {
