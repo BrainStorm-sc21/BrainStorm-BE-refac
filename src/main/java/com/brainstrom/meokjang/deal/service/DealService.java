@@ -100,6 +100,7 @@ public class DealService {
                     .image2(imageList[1])
                     .image3(imageList[2])
                     .image4(imageList[3])
+                    .isClosed(false)
                     .isDeleted(false)
                     .build();
             dealRepository.save(deal);
