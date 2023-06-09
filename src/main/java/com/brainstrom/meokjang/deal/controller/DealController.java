@@ -45,11 +45,10 @@ public class DealController {
         }
     }
 
-    @GetMapping("/deal/{dealId}/{userId}")
-    public ResponseEntity<ApiResponse> getDealInfo(@PathVariable Long dealId, @PathVariable Long userId) {
-
+    @GetMapping("/deal/{dealId}")
+    public ResponseEntity<ApiResponse> getDealInfo(@PathVariable Long dealId) {
         try {
-            DealInfoResponse dealInfoResponse = dealService.getDealInfo(dealId, userId);
+            DealInfoResponse dealInfoResponse = dealService.getDealInfo(dealId);
             ApiResponse res = new ApiResponse(200, "거래 정보 조회 성공", dealInfoResponse);
             return ResponseEntity.ok(res);
         } catch (IllegalStateException e) {

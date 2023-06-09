@@ -193,11 +193,11 @@ public class DealService {
         }
     }
 
-    public DealInfoResponse getDealInfo(Long dealId, Long userId) {
+    public DealInfoResponse getDealInfo(Long dealId) {
         try {
             Deal deal = dealRepository.findById(dealId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
-            User user = userRepository.findByUserId(userId)
+            User user = userRepository.findByUserId(deal.getUserId())
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             Double distance = getDistance(user.getLatitude(), user.getLongitude(), deal.getLatitude(), deal.getLongitude());
             return buildDealInfoResponse(deal, user, distance);
