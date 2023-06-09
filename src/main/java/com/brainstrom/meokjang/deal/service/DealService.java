@@ -1,5 +1,7 @@
 package com.brainstrom.meokjang.deal.service;
 
+import com.brainstrom.meokjang.chat.domain.ChatRoom;
+import com.brainstrom.meokjang.chat.repository.ChatRoomRepository;
 import com.brainstrom.meokjang.deal.domain.Deal;
 import com.brainstrom.meokjang.deal.dto.request.DealRequest;
 import com.brainstrom.meokjang.deal.dto.response.DealInfoResponse;
@@ -26,10 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -37,6 +36,7 @@ public class DealService {
 
     private final DealRepository dealRepository;
     private final UserRepository userRepository;
+    private final ChatRoomRepository chatRepository;
     private final ObjectStorage objectStorage;
     private final String ociNamespace;
     private final String ociBucketName;
@@ -45,7 +45,7 @@ public class DealService {
     public DealService(@Value("${OCI_CONFIG_PATH}") String ociConfigPath,
                     @Value("${OCI_NAMESPACE}") String ociNamespace,
                     @Value("${OCI_BUCKET_NAME}") String ociBucketName,
-                    DealRepository dealRepository, UserRepository userRepository) throws IOException {
+                    DealRepository dealRepository, UserRepository userRepository, ChatRoomRepository chatRepository) throws IOException {
         try {
             ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse(ociConfigPath, "DEFAULT");
             AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
@@ -81,6 +81,7 @@ public class DealService {
         this.ociBucketName = ociBucketName;
         this.dealRepository = dealRepository;
         this.userRepository = userRepository;
+        this.chatRepository = chatRepository;
     }
 
     public void save(DealRequest dealRequest) {
@@ -276,6 +277,21 @@ public class DealService {
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    public Map<Long, String> getChatDealUser(Long dealId) {
+        List<ChatRoom> chatRooms = chatRepository.findByDeal_DealId(dealId);
+        if (chatRooms.size() == 0) {
+            return null;
+        }
+        Map<Long, String> chatUserMap = new HashMap<>();
+        for (ChatRoom chatRoom : chatRooms) {
+            Long userId = chatRoom.getSender();
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않거나 탈퇴한 유저이기 때문에 후기를 보낼 수 없습니다."));
+            chatUserMap.put(userId, user.getUserName());
+        }
+        return chatUserMap;
     }
 
     public DealInfoResponse buildDealInfoResponse(Deal deal, User user, Double distance) {
