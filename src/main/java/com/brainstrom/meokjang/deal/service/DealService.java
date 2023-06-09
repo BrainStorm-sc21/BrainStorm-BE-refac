@@ -97,10 +97,10 @@ public class DealService {
                     .location(user.getLocation())
                     .latitude(user.getLatitude())
                     .longitude(user.getLongitude())
-                    .image1(imageList[0])
-                    .image2(imageList[1])
-                    .image3(imageList[2])
-                    .image4(imageList[3])
+                    .image1(imageList[0] != null ? imageList[0] : null)
+                    .image2(imageList[1] != null ? imageList[1] : null)
+                    .image3(imageList[2] != null ? imageList[2] : null)
+                    .image4(imageList[3] != null ? imageList[3] : null)
                     .isDeleted(false)
                     .build();
             dealRepository.save(deal);
@@ -181,23 +181,10 @@ public class DealService {
                 if (d.getIsDeleted()) {
                     continue;
                 }
+                User dealUser = userRepository.findByUserId(d.getUserId())
+                        .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
                 Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());
-                DealInfoResponse res = DealInfoResponse.builder()
-                        .dealId(d.getDealId())
-                        .userId(d.getUserId())
-                        .dealType(d.getDealType())
-                        .dealName(d.getDealName())
-                        .dealContent(d.getDealContent())
-                        .latitude(d.getLatitude())
-                        .longitude(d.getLongitude())
-                        .distance(distance)
-                        .image1(d.getImage1())
-                        .image2(d.getImage2())
-                        .image3(d.getImage3())
-                        .image4(d.getImage4())
-                        .isClosed(d.getIsClosed())
-                        .createdAt(d.getCreatedAt())
-                        .build();
+                DealInfoResponse res = buildDealInfoResponse(d, dealUser, distance);
                 dealLists.add(res);
             }
             return dealLists;
@@ -206,26 +193,14 @@ public class DealService {
         }
     }
 
-    public DealInfoResponse getDealInfo(Long dealId) {
+    public DealInfoResponse getDealInfo(Long dealId, Long userId) {
         try {
             Deal deal = dealRepository.findById(dealId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
-            return DealInfoResponse.builder()
-                    .dealId(deal.getDealId())
-                    .userId(deal.getUserId())
-                    .dealType(deal.getDealType())
-                    .dealName(deal.getDealName())
-                    .dealContent(deal.getDealContent())
-                    .latitude(deal.getLatitude())
-                    .longitude(deal.getLongitude())
-                    .distance(null)
-                    .image1(deal.getImage1())
-                    .image2(deal.getImage2())
-                    .image3(deal.getImage3())
-                    .image4(deal.getImage4())
-                    .isClosed(deal.getIsClosed())
-                    .createdAt(deal.getCreatedAt())
-                    .build();
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+            Double distance = getDistance(user.getLatitude(), user.getLongitude(), deal.getLatitude(), deal.getLongitude());
+            return buildDealInfoResponse(deal, user, distance);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
@@ -277,28 +252,15 @@ public class DealService {
 
     public List<DealInfoResponse> myDealList(Long userId) {
         try {
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             List<Deal> deals = dealRepository.findByUserId(userId);
             List<DealInfoResponse> dealLists = new ArrayList<>();
             for (Deal d : deals) {
                 if (d.getIsDeleted()) {
                     continue;
                 }
-                DealInfoResponse res = DealInfoResponse.builder()
-                        .dealId(d.getDealId())
-                        .userId(d.getUserId())
-                        .dealType(d.getDealType())
-                        .dealName(d.getDealName())
-                        .dealContent(d.getDealContent())
-                        .latitude(d.getLatitude())
-                        .longitude(d.getLongitude())
-                        .distance((double) 0)
-                        .image1(d.getImage1())
-                        .image2(d.getImage2())
-                        .image3(d.getImage3())
-                        .image4(d.getImage4())
-                        .isClosed(d.getIsClosed())
-                        .createdAt(d.getCreatedAt())
-                        .build();
+                DealInfoResponse res = buildDealInfoResponse(d, user, 0.0);
                 dealLists.add(res);
             }
             return dealLists;
@@ -330,5 +292,26 @@ public class DealService {
             chatUserMap.put(userId, user.getUserName());
         }
         return chatUserMap;
+    }
+
+    public DealInfoResponse buildDealInfoResponse(Deal deal, User user, Double distance) {
+        return DealInfoResponse.builder()
+                .dealId(deal.getDealId())
+                .userId(deal.getUserId())
+                .userName(user.getUserName())
+                .reliability(user.getReliability())
+                .dealType(deal.getDealType())
+                .dealName(deal.getDealName())
+                .dealContent(deal.getDealContent())
+                .latitude(deal.getLatitude())
+                .longitude(deal.getLongitude())
+                .distance(distance)
+                .image1(deal.getImage1())
+                .image2(deal.getImage2())
+                .image3(deal.getImage3())
+                .image4(deal.getImage4())
+                .isClosed(deal.getIsClosed())
+                .createdAt(deal.getCreatedAt())
+                .build();
     }
 }

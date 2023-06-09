@@ -9,12 +9,15 @@ import com.brainstrom.meokjang.review.repository.ReviewRepository;
 import com.brainstrom.meokjang.user.domain.User;
 import com.brainstrom.meokjang.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Service
+@Transactional
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -49,13 +52,6 @@ public class ReviewService {
                     .rating(reviewRequest.getRating())
                     .reviewContent(reviewRequest.getReviewContent())
                     .build();
-//            Review review = Review.builder()
-//                    .reviewFrom(reviewRequest.getReviewFrom())
-//                    .reviewTo(reviewRequest.getReviewTo())
-//                    .dealId(dealId)
-//                    .rating(reviewRequest.getRating())
-//                    .reviewContent(reviewRequest.getReviewContent())
-//                    .build();
             reviewRepository.save(review);
             updateReliability(reviewTo.getUserId(), reviewRequest.getRating());
         }
@@ -63,9 +59,47 @@ public class ReviewService {
 
     public Map<String, List<ReviewResponse>> getReviewList(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+        List<Review> reviewFrom = reviewRepository.findAllByReviewFrom(user.getUserId());
+        List<Review> reviewTo = reviewRepository.findAllByReviewTo(user.getUserId());
+        List<ReviewResponse> reviewFromRes = new ArrayList<>();
+        List<ReviewResponse> reviewToRes = new ArrayList<>();
+        for (Review review : reviewFrom) {
+            User reviewToUser = userRepository.findById(review.getReviewTo())
+                    .orElseThrow(()-> new IllegalStateException("존재하지 않는 유저입니다."));
+            ReviewResponse res = ReviewResponse.builder()
+                    .reviewId(review.getReviewId())
+                    .reviewFrom(review.getReviewFrom())
+                    .reviewFromName(user.getUserName())
+                    .reviewFromReliability(user.getReliability())
+                    .reviewTo(review.getReviewTo())
+                    .reviewToName(reviewToUser.getUserName())
+                    .reviewToReliability(reviewToUser.getReliability())
+                    .dealId(review.getDealId())
+                    .rating(review.getRating())
+                    .reviewContent(review.getReviewContent())
+                    .build();
+            reviewFromRes.add(res);
+        }
+        for (Review review : reviewTo) {
+            User reviewFromUser = userRepository.findById(review.getReviewFrom())
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+            ReviewResponse res = ReviewResponse.builder()
+                    .reviewId(review.getReviewId())
+                    .reviewFrom(review.getReviewFrom())
+                    .reviewFromName(reviewFromUser.getUserName())
+                    .reviewFromReliability(reviewFromUser.getReliability())
+                    .reviewTo(review.getReviewTo())
+                    .reviewToName(user.getUserName())
+                    .reviewToReliability(user.getReliability())
+                    .dealId(review.getDealId())
+                    .rating(review.getRating())
+                    .reviewContent(review.getReviewContent())
+                    .build();
+            reviewToRes.add(res);
+        }
         return Map.of(
-                "reviewFrom", reviewRepository.findAllByReviewFrom(user.getUserId()),
-                "reviewTo", reviewRepository.findAllByReviewTo(user.getUserId())
+                "reviewFrom", reviewFromRes,
+                "reviewTo", reviewToRes
         );
     }
 
