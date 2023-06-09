@@ -34,15 +34,15 @@ public class FoodController {
 
     @PostMapping("/food/add")
     public ResponseEntity<ApiResponse> addFood(@RequestBody FoodRequest foodRequest) {
-        foodService.save(foodRequest);
-        ApiResponse apiResponse = new ApiResponse(200, "음식 추가 성공", null);
+        FoodResponse food = foodService.save(foodRequest);
+        ApiResponse apiResponse = new ApiResponse(200, "음식 추가 성공", food);
         return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("/food/addList")
     public ResponseEntity<ApiResponse> addFoodList(@RequestBody FoodListRequest foodList) {
-        foodService.saveList(foodList);
-        ApiResponse apiResponse = new ApiResponse(200, "음식 목록 추가 성공", null);
+        List<FoodResponse> savedList = foodService.saveList(foodList);
+        ApiResponse apiResponse = new ApiResponse(200, "음식 목록 추가 성공", savedList);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -56,7 +56,7 @@ public class FoodController {
     @PutMapping("/food/{foodId}")
     public ResponseEntity<ApiResponse> updateFood(@PathVariable Long foodId, @RequestBody FoodRequest foodRequest) {
         FoodResponse updatedFood = foodService.update(foodId, foodRequest);
-        ApiResponse apiResponse = new ApiResponse(200, "음식 수정 성공", null);
+        ApiResponse apiResponse = new ApiResponse(200, "음식 수정 성공", updatedFood);
         return ResponseEntity.ok(apiResponse);
     }
 
