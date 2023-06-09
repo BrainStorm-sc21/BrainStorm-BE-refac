@@ -180,23 +180,10 @@ public class DealService {
                 if (d.getIsDeleted()) {
                     continue;
                 }
+                User dealUser = userRepository.findByUserId(d.getUserId())
+                        .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
                 Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());
-                DealInfoResponse res = DealInfoResponse.builder()
-                        .dealId(d.getDealId())
-                        .userId(d.getUserId())
-                        .dealType(d.getDealType())
-                        .dealName(d.getDealName())
-                        .dealContent(d.getDealContent())
-                        .latitude(d.getLatitude())
-                        .longitude(d.getLongitude())
-                        .distance(distance)
-                        .image1(d.getImage1())
-                        .image2(d.getImage2())
-                        .image3(d.getImage3())
-                        .image4(d.getImage4())
-                        .isClosed(d.getIsClosed())
-                        .createdAt(d.getCreatedAt())
-                        .build();
+                DealInfoResponse res = buildDealInfoResponse(d, dealUser, distance);
                 dealLists.add(res);
             }
             return dealLists;
@@ -212,22 +199,7 @@ public class DealService {
             User user = userRepository.findByUserId(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             Double distance = getDistance(user.getLatitude(), user.getLongitude(), deal.getLatitude(), deal.getLongitude());
-            return DealInfoResponse.builder()
-                    .dealId(deal.getDealId())
-                    .userId(deal.getUserId())
-                    .dealType(deal.getDealType())
-                    .dealName(deal.getDealName())
-                    .dealContent(deal.getDealContent())
-                    .latitude(deal.getLatitude())
-                    .longitude(deal.getLongitude())
-                    .distance(distance)
-                    .image1(deal.getImage1())
-                    .image2(deal.getImage2())
-                    .image3(deal.getImage3())
-                    .image4(deal.getImage4())
-                    .isClosed(deal.getIsClosed())
-                    .createdAt(deal.getCreatedAt())
-                    .build();
+            return buildDealInfoResponse(deal, user, distance);
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
@@ -279,28 +251,15 @@ public class DealService {
 
     public List<DealInfoResponse> myDealList(Long userId) {
         try {
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             List<Deal> deals = dealRepository.findByUserId(userId);
             List<DealInfoResponse> dealLists = new ArrayList<>();
             for (Deal d : deals) {
                 if (d.getIsDeleted()) {
                     continue;
                 }
-                DealInfoResponse res = DealInfoResponse.builder()
-                        .dealId(d.getDealId())
-                        .userId(d.getUserId())
-                        .dealType(d.getDealType())
-                        .dealName(d.getDealName())
-                        .dealContent(d.getDealContent())
-                        .latitude(d.getLatitude())
-                        .longitude(d.getLongitude())
-                        .distance((double) 0)
-                        .image1(d.getImage1())
-                        .image2(d.getImage2())
-                        .image3(d.getImage3())
-                        .image4(d.getImage4())
-                        .isClosed(d.getIsClosed())
-                        .createdAt(d.getCreatedAt())
-                        .build();
+                DealInfoResponse res = buildDealInfoResponse(d, user, 0.0);
                 dealLists.add(res);
             }
             return dealLists;
@@ -317,5 +276,26 @@ public class DealService {
         } catch (IllegalStateException e) {
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    public DealInfoResponse buildDealInfoResponse(Deal deal, User user, Double distance) {
+        return DealInfoResponse.builder()
+                .dealId(deal.getDealId())
+                .userId(deal.getUserId())
+                .userName(user.getUserName())
+                .reliability(user.getReliability())
+                .dealType(deal.getDealType())
+                .dealName(deal.getDealName())
+                .dealContent(deal.getDealContent())
+                .latitude(deal.getLatitude())
+                .longitude(deal.getLongitude())
+                .distance(distance)
+                .image1(deal.getImage1())
+                .image2(deal.getImage2())
+                .image3(deal.getImage3())
+                .image4(deal.getImage4())
+                .isClosed(deal.getIsClosed())
+                .createdAt(deal.getCreatedAt())
+                .build();
     }
 }
