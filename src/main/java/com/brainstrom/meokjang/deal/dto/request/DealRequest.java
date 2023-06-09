@@ -5,15 +5,27 @@ import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@Builder
 public class DealRequest {
 
-    private Long userId;
-    private Integer dealType;
-    private String dealName;
-    private String dealContent;
-    private MultipartFile image1;
-    private MultipartFile image2;
-    private MultipartFile image3;
-    private MultipartFile image4;
+    private final Long userId;
+    private final Integer dealType;
+    private final String dealName;
+    private final String dealContent;
+    private final MultipartFile image1;
+    private final MultipartFile image2;
+    private final MultipartFile image3;
+    private final MultipartFile image4;
+
+    @Builder
+    public DealRequest(Long userId, Integer dealType, String dealName, String dealContent,
+                       MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4) {
+        this.userId = userId;
+        this.dealType = dealType;
+        this.dealName = dealName;
+        this.dealContent = dealContent;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
+        this.image4 = image4;
+    }
 }
