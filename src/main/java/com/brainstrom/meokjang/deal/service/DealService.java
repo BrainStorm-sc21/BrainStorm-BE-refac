@@ -205,10 +205,13 @@ public class DealService {
         }
     }
 
-    public DealInfoResponse getDealInfo(Long dealId) {
+    public DealInfoResponse getDealInfo(Long dealId, Long userId) {
         try {
             Deal deal = dealRepository.findById(dealId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+            Double distance = getDistance(user.getLatitude(), user.getLongitude(), deal.getLatitude(), deal.getLongitude());
             return DealInfoResponse.builder()
                     .dealId(deal.getDealId())
                     .userId(deal.getUserId())
@@ -217,7 +220,7 @@ public class DealService {
                     .dealContent(deal.getDealContent())
                     .latitude(deal.getLatitude())
                     .longitude(deal.getLongitude())
-                    .distance(null)
+                    .distance(distance)
                     .image1(deal.getImage1())
                     .image2(deal.getImage2())
                     .image3(deal.getImage3())
