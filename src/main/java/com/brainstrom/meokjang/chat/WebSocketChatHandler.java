@@ -12,6 +12,9 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -21,7 +24,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ChatService service;
 
-    private WebSocketSession beforeSession;
+    private Set<WebSocketSession> beforeSessions = new HashSet<>();
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -34,7 +37,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatRoomDto room = service.findRoomById(chatMessage.getRoomId());
         log.info("room {}", room.toString());
 
-        room.handleAction(beforeSession, session, chatMessage, service);
+        room.handleAction(beforeSessions, session, chatMessage, service);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
-        beforeSession = session;
-        log.info("afterConnectionClosed session {}", beforeSession);
+        beforeSessions.add(session);
+        log.info("afterConnectionClosed session {}", session);
     }
 }

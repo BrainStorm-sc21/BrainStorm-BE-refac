@@ -6,6 +6,8 @@ import com.brainstrom.meokjang.chat.domain.ChatRoom;
 import com.brainstrom.meokjang.chat.dto.*;
 import com.brainstrom.meokjang.chat.repository.ChatMessageRepository;
 import com.brainstrom.meokjang.chat.repository.ChatRoomRepository;
+import com.brainstrom.meokjang.deal.domain.Deal;
+import com.brainstrom.meokjang.deal.repository.DealRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
@@ -27,11 +29,13 @@ public class ChatService {
     private Map<String, ChatRoomDto> chatRooms;
     private ChatRoomRepository chatRepo;
     private ChatMessageRepository messageRepo;
+    private DealRepository dealRepo;
     @Autowired
-    public ChatService(ObjectMapper mapper, ChatRoomRepository chatRepo, ChatMessageRepository messageRepo) {
+    public ChatService(ObjectMapper mapper, ChatRoomRepository chatRepo, ChatMessageRepository messageRepo, DealRepository dealRepo){
         this.mapper = mapper;
         this.chatRepo = chatRepo;
         this.messageRepo = messageRepo;
+        this.dealRepo = dealRepo;
     }
 
     @PostConstruct
@@ -56,12 +60,19 @@ public class ChatService {
 
         ChatRoomDto roomDto = ChatRoomDto.builder()
                 .roomId(roomId)
+                .dealId(chatRoomRequest.getDealId())
                 .sender(chatRoomRequest.getSender())
                 .receiver(chatRoomRequest.getReceiver())
                 .build();
-
         chatRooms.put(roomId, roomDto);
-        ChatRoom room = ChatRoom.toEntity(roomDto);
+        Deal deal;
+        try{
+            deal = dealRepo.findById(chatRoomRequest.getDealId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 거래입니다."));
+        } catch (IllegalArgumentException e){
+            deal = null;
+        }
+        ChatRoom room = ChatRoom.toEntity(roomDto, deal);
         return new ChatRoomResponse(chatRepo.save(room));
     }
 
