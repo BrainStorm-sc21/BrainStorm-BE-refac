@@ -8,25 +8,10 @@ import com.brainstrom.meokjang.deal.dto.response.DealInfoResponse;
 import com.brainstrom.meokjang.deal.repository.DealRepository;
 import com.brainstrom.meokjang.user.domain.User;
 import com.brainstrom.meokjang.user.repository.UserRepository;
-import com.oracle.bmc.ConfigFileReader;
-import com.oracle.bmc.Region;
-import com.oracle.bmc.auth.AuthenticationDetailsProvider;
-import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
-import com.oracle.bmc.objectstorage.ObjectStorage;
-import com.oracle.bmc.objectstorage.ObjectStorageClient;
-import com.oracle.bmc.objectstorage.requests.*;
-import com.oracle.bmc.objectstorage.responses.GetBucketResponse;
-import com.oracle.bmc.objectstorage.responses.GetNamespaceResponse;
-import com.oracle.bmc.objectstorage.transfer.UploadConfiguration;
-import com.oracle.bmc.objectstorage.transfer.UploadManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
