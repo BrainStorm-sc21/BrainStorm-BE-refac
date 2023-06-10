@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
     Optional<User> findByPhoneNumber(String phoneNumber);
     Optional<User> findBySnsTypeAndSnsKey(String snsType, String snsKey);
 
