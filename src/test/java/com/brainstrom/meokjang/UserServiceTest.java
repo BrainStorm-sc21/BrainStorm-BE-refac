@@ -75,7 +75,7 @@ public class UserServiceTest {
 
         //when
         UserInfoResponse userInfoResponse = userService.updateUserInfo(savedId, "test2");
-        User user = userRepository.findByUserId(savedId)
+        User user = userRepository.findById(savedId)
                 .orElse(null);
 
         //then
