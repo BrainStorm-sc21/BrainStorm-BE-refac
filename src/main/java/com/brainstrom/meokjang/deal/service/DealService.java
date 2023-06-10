@@ -86,7 +86,7 @@ public class DealService {
 
     public void save(DealRequest dealRequest) {
         try {
-            User user = userRepository.findByUserId(dealRequest.getUserId())
+            User user = userRepository.findById(dealRequest.getUserId())
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             String[] imageList = uploadImage(dealRequest);
             Deal deal = Deal.builder()
@@ -173,7 +173,7 @@ public class DealService {
 
     public List<DealInfoResponse> aroundDealList(Long userId) {
         try {
-            User user = userRepository.findByUserId(userId)
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             List<Deal> deals = dealRepository.findAroundDealList(user.getLatitude(), user.getLongitude());
             List<DealInfoResponse> dealLists = new ArrayList<>();
@@ -181,7 +181,7 @@ public class DealService {
                 if (d.getIsDeleted()) {
                     continue;
                 }
-                User dealUser = userRepository.findByUserId(d.getUserId())
+                User dealUser = userRepository.findById(d.getUserId())
                         .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
                 Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());
                 DealInfoResponse res = buildDealInfoResponse(d, dealUser, distance);
@@ -197,7 +197,7 @@ public class DealService {
         try {
             Deal deal = dealRepository.findById(dealId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
-            User user = userRepository.findByUserId(deal.getUserId())
+            User user = userRepository.findById(deal.getUserId())
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             Double distance = getDistance(user.getLatitude(), user.getLongitude(), deal.getLatitude(), deal.getLongitude());
             return buildDealInfoResponse(deal, user, distance);
@@ -252,7 +252,7 @@ public class DealService {
 
     public List<DealInfoResponse> myDealList(Long userId) {
         try {
-            User user = userRepository.findByUserId(userId)
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             List<Deal> deals = dealRepository.findByUserId(userId);
             List<DealInfoResponse> dealLists = new ArrayList<>();
@@ -287,7 +287,7 @@ public class DealService {
         Map<Long, String> chatUserMap = new HashMap<>();
         for (ChatRoom chatRoom : chatRooms) {
             Long userId = chatRoom.getSender();
-            User user = userRepository.findByUserId(userId)
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않거나 탈퇴한 유저이기 때문에 후기를 보낼 수 없습니다."));
             chatUserMap.put(userId, user.getUserName());
         }

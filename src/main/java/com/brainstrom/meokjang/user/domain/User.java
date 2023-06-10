@@ -49,13 +49,16 @@ public class User {
     @Column(name = "stop_until")
     private LocalDate stopUntil;
 
+    @Column(name = "firebase_token")
+    private String firebaseToken;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Builder
     public User(Long userId, String userName, String phoneNumber, String snsType, String snsKey, String location,
-                Double latitude, Double longitude, Integer gender, Float reliability, LocalDate stopUntil) {
+                Double latitude, Double longitude, Integer gender, Float reliability, LocalDate stopUntil, String firebaseToken) {
         this.userId = userId;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
@@ -67,5 +70,6 @@ public class User {
         this.gender = gender;
         this.reliability = reliability;
         this.stopUntil = stopUntil;
+        this.firebaseToken = firebaseToken;
     }
 }
