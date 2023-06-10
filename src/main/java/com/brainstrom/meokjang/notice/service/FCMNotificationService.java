@@ -7,13 +7,11 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
 public class FCMNotificationService {
 
@@ -35,12 +33,12 @@ public class FCMNotificationService {
                 Notification notification = Notification.builder()
                         .setTitle(requestDto.getTitle())
                         .setBody(requestDto.getBody())
-                        // .setImage(requestDto.getImage())
                         .build();
 
                 Message message = Message.builder()
                         .setToken(user.get().getFirebaseToken())
                         .setNotification(notification)
+                        .putAllData(requestDto.getData())
                         .build();
 
                 try {
