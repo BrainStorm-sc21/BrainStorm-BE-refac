@@ -34,51 +34,15 @@ import java.util.*;
 @Transactional
 public class DealService {
 
+    private final BucketService bucketService;
     private final DealRepository dealRepository;
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRepository;
-    private final ObjectStorage objectStorage;
-    private final String ociNamespace;
-    private final String ociBucketName;
 
     @Autowired
-    public DealService(@Value("${OCI_CONFIG_PATH}") String ociConfigPath,
-                    @Value("${OCI_NAMESPACE}") String ociNamespace,
-                    @Value("${OCI_BUCKET_NAME}") String ociBucketName,
-                    DealRepository dealRepository, UserRepository userRepository, ChatRoomRepository chatRepository) throws IOException {
-        try {
-            ConfigFileReader.ConfigFile configFile = ConfigFileReader.parse(ociConfigPath, "DEFAULT");
-            AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-            objectStorage = ObjectStorageClient.builder()
-                    .region(Region.AP_CHUNCHEON_1)
-                    .build(provider);
-
-//            ------------------ OCI SDK TEST ------------------
-            GetNamespaceResponse namespaceResponse = objectStorage.getNamespace(GetNamespaceRequest.builder().build());
-            String namespaceName = namespaceResponse.getValue();
-            System.out.println("namespaceName: " + namespaceName);
-            List<GetBucketRequest.Fields> fieldsList = new ArrayList<>(2);
-            fieldsList.add(GetBucketRequest.Fields.ApproximateCount);
-            fieldsList.add(GetBucketRequest.Fields.ApproximateSize);
-
-            GetBucketRequest getBucketRequest = GetBucketRequest.builder()
-                    .namespaceName(ociNamespace)
-                    .bucketName(ociBucketName)
-                    .fields(fieldsList)
-                    .build();
-            System.out.println("Fetching Bucket Details");
-            GetBucketResponse getBucketResponse = objectStorage.getBucket(getBucketRequest);
-            System.out.println("Bucket Name: " + getBucketResponse.getBucket().getName());
-            System.out.println("Bucket Compartment Id: " + getBucketResponse.getBucket().getCompartmentId());
-            System.out.println("Bucket Size: " + getBucketResponse.getBucket().getApproximateSize());
-            System.out.println("Bucket Object Count: " + getBucketResponse.getBucket().getApproximateCount());
-//            ------------------ OCI SDK TEST ------------------
-
-        } catch (IOException e) {
-            throw new IOException(e.getMessage());
-        }
-        this.ociNamespace = ociNamespace;
-        this.ociBucketName = ociBucketName;
+    public DealService(BucketService bucketService, DealRepository dealRepository,
+                       UserRepository userRepository, ChatRoomRepository chatRepository) {
+        this.bucketService = bucketService;
         this.dealRepository = dealRepository;
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
@@ -86,9 +50,9 @@ public class DealService {
 
     public void save(DealRequest dealRequest) {
         try {
-            User user = userRepository.findByUserId(dealRequest.getUserId())
-                    .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
-            String[] imageList = uploadImage(dealRequest);
+            User user = userRepository.findById(dealRequest.getUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+            String[] imageList = bucketService.uploadImage(dealRequest);
             Deal deal = Deal.builder()
                     .userId(dealRequest.getUserId())
                     .dealType(dealRequest.getDealType())
@@ -109,71 +73,9 @@ public class DealService {
         }
     }
 
-    private String[] uploadImage(DealRequest dealRequest) throws IOException {
-        String[] imageList = new String[4];
-        if (dealRequest.getImage1() != null) {
-            imageList[0] = upload(dealRequest.getImage1());
-        }
-        if (dealRequest.getImage2() != null) {
-            imageList[1] = upload(dealRequest.getImage2());
-        }
-        if (dealRequest.getImage3() != null) {
-            imageList[2] = upload(dealRequest.getImage3());
-        }
-        if (dealRequest.getImage4() != null) {
-            imageList[3] = upload(dealRequest.getImage4());
-        }
-        return imageList;
-    }
-
-    private String upload(MultipartFile image) throws IOException {
-        UploadConfiguration uploadConfiguration =
-                UploadConfiguration.builder()
-                .allowMultipartUploads(true)
-                .allowParallelUploads(true)
-                .build();
-        UploadManager uploadManager = new UploadManager(objectStorage, uploadConfiguration);
-        String fileName = UUID.randomUUID().toString();
-        PutObjectRequest por = PutObjectRequest.builder()
-                .bucketName(ociBucketName)
-                .namespaceName(ociNamespace)
-                .objectName(fileName)
-                .contentType(image.getContentType())
-                .opcMeta(null)
-                .build();
-        File file = convertMultipartFileToFile(image);
-        if (file == null) {
-            return null;
-        }
-        image.transferTo(file);
-        UploadManager.UploadRequest uploadDetails =
-                UploadManager.UploadRequest.builder(file)
-                .allowOverwrite(true)
-                .build(por);
-        UploadManager.UploadResponse uploadResponse = uploadManager.upload(uploadDetails);
-        System.out.println("uploadResponse: " + uploadResponse);
-        file.delete();
-        return fileName;
-    }
-
-    private File convertMultipartFileToFile(MultipartFile image) {
-        if (image.isEmpty()) {
-            return null;
-        }
-        File file = new File(Objects.requireNonNull(image.getOriginalFilename()));
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(image.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
-        return file;
-    }
-
     public List<DealInfoResponse> aroundDealList(Long userId) {
         try {
-            User user = userRepository.findByUserId(userId)
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             List<Deal> deals = dealRepository.findAroundDealList(user.getLatitude(), user.getLongitude());
             List<DealInfoResponse> dealLists = new ArrayList<>();
@@ -181,7 +83,7 @@ public class DealService {
                 if (d.getIsDeleted()) {
                     continue;
                 }
-                User dealUser = userRepository.findByUserId(d.getUserId())
+                User dealUser = userRepository.findById(d.getUserId())
                         .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
                 Double distance = getDistance(user.getLatitude(), user.getLongitude(), d.getLatitude(), d.getLongitude());
                 DealInfoResponse res = buildDealInfoResponse(d, dealUser, distance);
@@ -197,7 +99,7 @@ public class DealService {
         try {
             Deal deal = dealRepository.findById(dealId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
-            User user = userRepository.findByUserId(deal.getUserId())
+            User user = userRepository.findById(deal.getUserId())
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             Double distance = getDistance(user.getLatitude(), user.getLongitude(), deal.getLatitude(), deal.getLongitude());
             return buildDealInfoResponse(deal, user, distance);
@@ -210,7 +112,7 @@ public class DealService {
         try {
             Deal deal = dealRepository.findById(dealId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
-            String[] imageList = uploadImage(dealRequest);
+            String[] imageList = bucketService.uploadImage(dealRequest);
             deal.update(dealRequest.getDealType(), dealRequest.getDealName(), dealRequest.getDealContent(), imageList);
         } catch (IllegalStateException | IOException e) {
             throw new IllegalStateException(e.getMessage());
@@ -223,14 +125,9 @@ public class DealService {
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
             String[] imageList = deal.getImageList();
             for (String image : imageList) {
-                if (image != null) {
-                    DeleteObjectRequest dor = DeleteObjectRequest.builder()
-                            .bucketName(ociBucketName)
-                            .namespaceName(ociNamespace)
-                            .objectName(image)
-                            .build();
-                    objectStorage.deleteObject(dor);
-                }
+                if (image != null)
+                    if (!bucketService.deleteImage(image))
+                        throw new IllegalStateException("이미지 삭제에 실패했습니다.");
             }
             deal.delete();
         } catch (IllegalStateException e) {
@@ -238,21 +135,9 @@ public class DealService {
         }
     }
 
-    private Double getDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
-        final int R = 6371;
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
-
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c * 1000;
-    }
-
     public List<DealInfoResponse> myDealList(Long userId) {
         try {
-            User user = userRepository.findByUserId(userId)
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
             List<Deal> deals = dealRepository.findByUserId(userId);
             List<DealInfoResponse> dealLists = new ArrayList<>();
@@ -287,11 +172,23 @@ public class DealService {
         Map<Long, String> chatUserMap = new HashMap<>();
         for (ChatRoom chatRoom : chatRooms) {
             Long userId = chatRoom.getSender();
-            User user = userRepository.findByUserId(userId)
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalStateException("존재하지 않거나 탈퇴한 유저이기 때문에 후기를 보낼 수 없습니다."));
             chatUserMap.put(userId, user.getUserName());
         }
         return chatUserMap;
+    }
+
+    private Double getDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
+        final int R = 6371;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c * 1000;
     }
 
     public DealInfoResponse buildDealInfoResponse(Deal deal, User user, Double distance) {
