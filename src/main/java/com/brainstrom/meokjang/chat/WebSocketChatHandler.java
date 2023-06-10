@@ -3,6 +3,8 @@ package com.brainstrom.meokjang.chat;
 import com.brainstrom.meokjang.chat.dto.ChatMessageDto;
 import com.brainstrom.meokjang.chat.dto.ChatRoomDto;
 import com.brainstrom.meokjang.chat.service.ChatService;
+import com.brainstrom.meokjang.notice.service.FCMNotificationService;
+import com.brainstrom.meokjang.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +24,9 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper mapper;
 
-    private final ChatService service;
-
+    private final ChatService chatService;
+    private final FCMNotificationService noticeService;
+    private final UserService userService;
     private Set<WebSocketSession> beforeSessions = new HashSet<>();
 
     @Override
@@ -34,10 +37,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatMessageDto chatMessage = mapper.readValue(payload, ChatMessageDto.class);
         log.info("session {}", chatMessage.toString());
 
-        ChatRoomDto room = service.findRoomById(chatMessage.getRoomId());
+        ChatRoomDto room = chatService.findRoomById(chatMessage.getRoomId());
         log.info("room {}", room.toString());
 
-        room.handleAction(beforeSessions, session, chatMessage, service);
+        room.handleAction(beforeSessions, session, chatMessage, chatService, noticeService, userService);
     }
 
     @Override
