@@ -42,7 +42,7 @@ public class FCMConfig {
             Scanner scanner = new Scanner(refreshToken).useDelimiter("\\A");
             String json = scanner.hasNext() ? scanner.next() : "";
             JsonReader jsonReader = new JsonReader(new StringReader(json));
-            jsonReader.setLenient(true); // 여기 추가
+            jsonReader.setLenient(true);
             JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
 
             GoogleCredentials credentials = GoogleCredentials.fromStream(new ByteArrayInputStream(json.getBytes()));
