@@ -34,8 +34,8 @@ jobs:
       - name: Set up oci_api_key.pem
         run: echo "${{ secrets.OCI_API_KEY_CONTENT }}" > ./src/main/resources/oci_api_key.pem
 
-      - name: Set up firebase-adminsdk.json
-        run: echo "${{ secrets.FIREBASE_ADMINSDK_CONTENT }}" > ./src/main/resources/firebase-adminsdk.json
+#      - name: Set up firebase-adminsdk.json
+#        run: echo "${{ secrets.FIREBASE_ADMINSDK_CONTENT }}" > ./src/main/resources/firebase-adminsdk.json
 
       - name: Set ENV
         run: echo "TIME=$(date "+%Y-%m-%d-%H-%M")" >> $GITHUB_ENV
