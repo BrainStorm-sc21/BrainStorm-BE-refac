@@ -48,9 +48,10 @@ public class RecipeService {
 
         ObjectNode payload = objectMapper.createObjectNode()
                 .put("model", "gpt-3.5-turbo")
-                .put("temperature", 0.7)
+                .put("temperature", 0.5)
                 .put("top_p", 0.5)
-                .put("frequency_penalty", 0.5)
+                .put("frequency_penalty", -0.5)
+                .put("presence_penalty", 2.0)
                 .set("messages", messagesNode);
 
         HttpEntity<String> requestEntity = new HttpEntity<>(objectMapper.writeValueAsString(payload), headers);

@@ -7,7 +7,6 @@ import com.brainstrom.meokjang.chat.dto.*;
 import com.brainstrom.meokjang.chat.repository.ChatMessageRepository;
 import com.brainstrom.meokjang.chat.repository.ChatRoomRepository;
 import com.brainstrom.meokjang.deal.domain.Deal;
-import com.brainstrom.meokjang.deal.dto.response.DealInfoResponse;
 import com.brainstrom.meokjang.deal.repository.DealRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;

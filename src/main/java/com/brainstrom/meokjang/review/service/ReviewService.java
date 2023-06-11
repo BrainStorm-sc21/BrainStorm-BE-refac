@@ -1,6 +1,5 @@
 package com.brainstrom.meokjang.review.service;
 
-import com.brainstrom.meokjang.chat.dto.ChatMessageDto;
 import com.brainstrom.meokjang.deal.domain.Deal;
 import com.brainstrom.meokjang.deal.repository.DealRepository;
 import com.brainstrom.meokjang.notice.dto.FCMNotificationRequestDto;

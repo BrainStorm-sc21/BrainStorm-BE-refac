@@ -37,7 +37,13 @@ public class AuthService {
         return new AuthResponse(user.getUserId());
     }
 
-    public void validateDuplicateUser(User user) {
+    public void withdraw(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
+        userRepository.delete(user);
+    }
+
+    private void validateDuplicateUser(User user) {
         userRepository.findById(user.getUserId())
                         .orElseThrow(() -> new IllegalStateException("이미 존재하는 회원입니다."));
     }
