@@ -16,14 +16,15 @@ public class ReviewResponse {
     private final String reviewToName;
     private final Float reviewToReliability;
     private final Long dealId;
+    private final String dealName;
     private final Float rating;
     private final String reviewContent;
     private final LocalDateTime createdAt;
 
     @Builder
     public ReviewResponse(Long reviewId, Long reviewFrom, String reviewFromName, Float reviewFromReliability,
-                          Long reviewTo, String reviewToName, Float reviewToReliability,
-                          Long dealId, Float rating, String reviewContent, LocalDateTime createdAt) {
+                          Long reviewTo, String reviewToName, Float reviewToReliability, Long dealId, String dealName,
+                          Float rating, String reviewContent, LocalDateTime createdAt) {
         this.reviewId = reviewId;
         this.reviewFrom = reviewFrom;
         this.reviewFromName = reviewFromName;
@@ -32,6 +33,7 @@ public class ReviewResponse {
         this.reviewToName = reviewToName;
         this.reviewToReliability = reviewToReliability;
         this.dealId = dealId;
+        this.dealName = dealName;
         this.rating = rating;
         this.reviewContent = reviewContent;
         this.createdAt = createdAt;
