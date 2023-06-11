@@ -33,7 +33,7 @@ public class DealService {
         this.chatRepository = chatRepository;
     }
 
-    public void save(DealRequest dealRequest) {
+    public DealInfoResponse save(DealRequest dealRequest) {
         try {
             User user = userRepository.findById(dealRequest.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
@@ -53,6 +53,7 @@ public class DealService {
                     .isDeleted(false)
                     .build();
             dealRepository.save(deal);
+            return buildDealInfoResponse(deal, user, 0.0);
         } catch (IllegalStateException | IOException e) {
             throw new IllegalStateException(e.getMessage());
         }
