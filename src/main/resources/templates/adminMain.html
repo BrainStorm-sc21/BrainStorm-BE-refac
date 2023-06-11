@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>먹장 관리자 페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" href="../static/style.css">
     <script>
         function goToPage(url) {
             window.location.href = url;
@@ -14,7 +15,6 @@
     <div class="container">
         <div>
             <button onclick="goToPage('/admin/report')">신고 관리</button>
-            </br>
             <button onclick="goToPage('/admin/ad')">광고 관리</button>
         </div>
         </br>

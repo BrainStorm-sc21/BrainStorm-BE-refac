@@ -1,0 +1,45 @@
+.container {
+    text-align: center;
+    align-items: center;
+}
+
+.blue-text {
+    color: blue;
+}
+
+.red-text {
+    color: red;
+}
+
+button {
+    width: 100px;
+    height: 50px;
+    margin: 10px;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: auto;
+    margin: 20px auto;
+}
+
+th {
+    background-color: #f2f2f2;
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
