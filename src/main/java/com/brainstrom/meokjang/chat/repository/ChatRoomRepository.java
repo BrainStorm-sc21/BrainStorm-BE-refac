@@ -1,6 +1,5 @@
 package com.brainstrom.meokjang.chat.repository;
 
-import com.brainstrom.meokjang.chat.domain.ChatMessage;
 import com.brainstrom.meokjang.chat.domain.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

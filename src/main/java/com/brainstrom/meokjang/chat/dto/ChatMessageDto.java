@@ -17,6 +17,7 @@ public class ChatMessageDto {
     private MessageType type;
     private String roomId;
     private Long sender;
+    private Long receiver;
     private String message;
     private LocalDateTime time;
 }
