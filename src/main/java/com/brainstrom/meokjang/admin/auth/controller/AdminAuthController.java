@@ -23,8 +23,7 @@ public class AdminAuthController {
 
     @GetMapping("/admin")
     public String adminLogin(Model model, HttpSession httpSession) {
-        Boolean canAccessAdminPage = (Boolean) httpSession.getAttribute("canAccessAdminPage");
-        if (canAccessAdminPage != null && canAccessAdminPage) {
+        if (validSession(httpSession)) {
             List<Integer> dealCountList = adminAuthService.getDealCountList();
             model.addAttribute("list", dealCountList);
             return "adminMain";
@@ -37,7 +36,7 @@ public class AdminAuthController {
     public String adminLoginPost(AdminLoginForm adminLoginForm, Model model, HttpSession httpSession) {
         try {
             if (adminAuthService.adminLogin(adminLoginForm)) {
-                httpSession.setAttribute("canAccessAdminPage", true);
+                httpSession.setAttribute("canAccessAdminPage", adminLoginForm.getName());
                 List<Integer> dealCountList = adminAuthService.getDealCountList();
                 model.addAttribute("list", dealCountList);
                 return "adminMain";
@@ -49,5 +48,10 @@ public class AdminAuthController {
             System.out.println(e.getMessage());
             return "adminLogin";
         }
+    }
+
+    private boolean validSession(HttpSession httpSession) {
+        String canAccessAdminPage = (String) httpSession.getAttribute("canAccessAdminPage");
+        return canAccessAdminPage != null && adminAuthService.validate(canAccessAdminPage);
     }
 }

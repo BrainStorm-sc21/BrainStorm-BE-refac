@@ -41,4 +41,10 @@ public class AdminAuthService {
         System.out.println("dealCountList: " + dealCountList);
         return dealCountList;
     }
+
+    public boolean validate(String canAccessAdminPage) {
+        Admin admin = adminRepository.findByAdminName(canAccessAdminPage)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자 계정입니다."));
+        return admin != null;
+    }
 }
