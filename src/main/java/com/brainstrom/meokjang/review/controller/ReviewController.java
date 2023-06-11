@@ -36,8 +36,7 @@ public class ReviewController {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "리뷰 작성 실패", result.getAllErrors()));
         }
         try {
-            reviewService.save(dealId, reviewRequest);
-            ApiResponse res = new ApiResponse(200, "리뷰 작성 성공", null);
+            ApiResponse res = new ApiResponse(200, "리뷰 작성 성공", reviewService.save(dealId, reviewRequest));
             return ResponseEntity.ok(res);
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "리뷰 작성 실패", e.getMessage()));
