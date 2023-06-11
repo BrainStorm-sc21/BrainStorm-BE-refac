@@ -13,4 +13,6 @@ public interface DealRepository extends JpaRepository<Deal, Long> {
     List<Deal> findAroundDealList(@Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
     List<Deal> findByUserId(Long userId);
+
+    Integer countByDealType(int i);
 }

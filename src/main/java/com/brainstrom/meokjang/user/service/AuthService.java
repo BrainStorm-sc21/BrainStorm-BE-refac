@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @Transactional
 public class AuthService {
@@ -34,6 +36,8 @@ public class AuthService {
         User user = userRepository.findByPhoneNumber(dto.getPhoneNumber())
                 .orElseGet(() -> userRepository.findBySnsTypeAndSnsKey(dto.getSnsType(), dto.getSnsKey())
                         .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다.")));
+        if (user.getStopUntil().isAfter(LocalDate.now()))
+            throw new IllegalStateException("정지된 회원입니다.");
         return new AuthResponse(user.getUserId());
     }
 

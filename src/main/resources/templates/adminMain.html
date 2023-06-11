@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>먹장 관리자 페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" href="../static/style.css">
+    <script>
+        function goToPage(url) {
+            window.location.href = url;
+        }
+    </script>
+</head>
+<body>
+    <h1>먹장 관리자 페이지</h1>
+    <div class="container">
+        <div>
+            <button onclick="goToPage('/admin/report')">신고 관리</button>
+        </div>
+        </br>
+        <div>
+            <h3>사용자 등록 거래 유형</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <td>공동구매</td>
+                        <td>교환</td>
+                        <td>나눔</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${list[0]}"></td>
+                        <td th:text="${list[1]}"></td>
+                        <td th:text="${list[2]}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
