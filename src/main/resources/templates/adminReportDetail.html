@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>신고 상세</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}" href="../static/style.css">
+</head>
+<body>
+    <h1>신고 상세 페이지</h1>
+    <button type="button" onclick="javascript:window.history.back();">뒤로 가기</button>
+    <br>
+    <h2>신고 내용</h2>
+    <table>
+        <tr>
+            <td class="label">신고 ID</td>
+            <td class="info" th:text="${report.reportId}"></td>
+        </tr>
+        <tr>
+            <td class="label">신고자 ID</td>
+            <td class="info" th:text="${report.reportingUser}"></td>
+            <td class="label">신고자 이름</td>
+            <td class="info" th:text="${report.reportingUserName}"></td>
+        </tr>
+        <tr>
+            <td class="label">피신고자 ID</td>
+            <td class="info" th:text="${report.reportedUser}"></td>
+            <td class="label">피신고자 이름</td>
+            <td class="info" th:text="${report.reportedUserName}"></td>
+        </tr>
+        <tr>
+            <td class="label" style="vertical-align: top;">신고 내용</td>
+            <td colspan="3" class="info" th:text="${report.reportText}"></td>
+        </tr>
+        <tr>
+            <td class="label">처리 여부</td>
+            <td class="info" th:text="${report.isHandled}"></td>
+            <td class="label">처리자</td>
+            <td class="info" th:text="${report.handledBy}"></td>
+        </tr>
+        <tr>
+            <td class="label">처리 날짜</td>
+            <td class="info" th:text="${report.handledAt}"></td>
+            <td class="label">신고 날짜</td>
+            <td class="info" th:text="${report.createdAt}"></td>
+        </tr>
+    </table>
+    <form th:action="@{/admin/handleReport}" method="POST">
+        <tr>
+            <td class="label" style="vertical-align: top;">사용 정지 일수</td>
+            <td colspan="3"><input type="number" id="suspensionDays" name="suspensionDays" min="0" required></td>
+        </tr>
+        <input type="hidden" name="reportId" th:value="${report.reportId}"/>
+<!--        <input type="hidden" name="adminId" th:value="${report.}"/>-->
+        <tr>
+            <td colspan="4"><button type="submit">신고 처리</button></td>
+        </tr>
+    </form>
+</body>
+</html>
