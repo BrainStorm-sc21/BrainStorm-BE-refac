@@ -20,10 +20,7 @@ import java.util.Scanner;
 public class FCMConfig {
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource resource = new ClassPathResource("firebase-adminsdk.json");
-        System.out.println(resource.getFilename());
-        InputStream refreshToken = resource.getInputStream();
-        System.out.println(refreshToken);
+        FileInputStream refreshToken = new FileInputStream("./src/main/resources/firebase-adminsdk.json");
 
         FirebaseApp firebaseApp = null;
         List<FirebaseApp> firebaseAppList = FirebaseApp.getApps();
@@ -35,21 +32,10 @@ public class FCMConfig {
                 }
             }
         } else {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int nRead;
-            byte[] data = new byte[1024];
-            while ((nRead = refreshToken.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-            buffer.flush();
-
-            // 바이트 배열을 이용해 새로운 BufferedInputStream 생성
-            byte[] byteArray = buffer.toByteArray();
-            refreshToken = new BufferedInputStream(new ByteArrayInputStream(byteArray));
-
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(refreshToken))
                     .build();
+
 
             firebaseApp = FirebaseApp.initializeApp(options);
         }
