@@ -1,5 +1,6 @@
 package com.brainstrom.meokjang.deal.domain;
 
+import com.brainstrom.meokjang.chat.domain.ChatRoom;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(schema = "DEAL")
@@ -60,6 +63,9 @@ public class Deal {
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "deal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     @Builder
     public Deal(Long userId, Integer dealType, String dealName, String dealContent, String location, Double latitude,

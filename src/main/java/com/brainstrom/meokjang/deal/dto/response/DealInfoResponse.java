@@ -11,6 +11,8 @@ public class DealInfoResponse {
 
     private Long dealId;
     private Long userId;
+    private String userName;
+    private Float reliability;
     private Integer dealType;
     private String dealName;
     private String dealContent;
@@ -24,10 +26,13 @@ public class DealInfoResponse {
     private Boolean isClosed;
     private LocalDateTime createdAt;
 
-    public DealInfoResponse(Long dealId, Long userId, Integer dealType,String dealName, String dealContent, Double latitude, Double longitude,
-                            Double distance, String image1, String image2, String image3, String image4, Boolean isClosed, LocalDateTime createdAt) {
+    public DealInfoResponse(Long dealId, Long userId, String userName, Float reliability, Integer dealType,String dealName, String dealContent,
+                            Double latitude, Double longitude, Double distance, String image1, String image2, String image3, String image4,
+                            Boolean isClosed, LocalDateTime createdAt) {
         this.dealId = dealId;
         this.userId = userId;
+        this.userName = userName;
+        this.reliability = reliability;
         this.dealType = dealType;
         this.dealName = dealName;
         this.dealContent = dealContent;

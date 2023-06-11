@@ -42,7 +42,7 @@ public class UserServiceMockTest {
                 .build();
 
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(signupRequest.toEntity());
-        Mockito.when(userRepository.findByUserId(Mockito.any())).thenReturn(Optional.of(signupRequest.toEntity()));
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.of(signupRequest.toEntity()));
 
         Long savedId = authService.join(signupRequest).getUserId();
 

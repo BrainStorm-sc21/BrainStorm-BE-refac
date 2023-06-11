@@ -47,7 +47,6 @@ public class DealController {
 
     @GetMapping("/deal/{dealId}")
     public ResponseEntity<ApiResponse> getDealInfo(@PathVariable Long dealId) {
-
         try {
             DealInfoResponse dealInfoResponse = dealService.getDealInfo(dealId);
             ApiResponse res = new ApiResponse(200, "거래 정보 조회 성공", dealInfoResponse);
@@ -104,6 +103,16 @@ public class DealController {
             return ResponseEntity.ok(res);
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 완료 실패", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/deal/{dealId}/complete")
+    public ResponseEntity<ApiResponse> chatDealUserList(@PathVariable Long dealId) {
+        try {
+            ApiResponse result = new ApiResponse(200, "거래 채팅 유저 목록 조회 성공", dealService.getChatDealUser(dealId));
+            return ResponseEntity.ok(result);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 채팅 유저 목록 조회 실패", e.getMessage()));
         }
     }
 }
