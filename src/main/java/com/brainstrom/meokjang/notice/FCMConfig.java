@@ -11,10 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Scanner;
@@ -25,7 +22,6 @@ public class FCMConfig {
     FirebaseMessaging firebaseMessaging() throws IOException {
         ClassPathResource resource = new ClassPathResource("firebase-adminsdk.json");
         System.out.println(resource.getFilename());
-        System.out.println(resource);
         InputStream refreshToken = resource.getInputStream();
         System.out.println(refreshToken);
 
@@ -39,16 +35,20 @@ public class FCMConfig {
                 }
             }
         } else {
-            Scanner scanner = new Scanner(refreshToken).useDelimiter("\\A");
-            String json = scanner.hasNext() ? scanner.next() : "";
-            JsonReader jsonReader = new JsonReader(new StringReader(json));
-            jsonReader.setLenient(true);
-            JsonObject jsonObject = new Gson().fromJson(jsonReader, JsonObject.class);
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = refreshToken.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
 
-            GoogleCredentials credentials = GoogleCredentials.fromStream(new ByteArrayInputStream(json.getBytes()));
+            // 바이트 배열을 이용해 새로운 BufferedInputStream 생성
+            byte[] byteArray = buffer.toByteArray();
+            refreshToken = new BufferedInputStream(new ByteArrayInputStream(byteArray));
 
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(credentials)
+                    .setCredentials(GoogleCredentials.fromStream(refreshToken))
                     .build();
 
             firebaseApp = FirebaseApp.initializeApp(options);
