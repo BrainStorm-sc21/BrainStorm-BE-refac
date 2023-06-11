@@ -1,32 +1,36 @@
 package com.brainstrom.meokjang.review.service;
 
+import com.brainstrom.meokjang.chat.dto.ChatMessageDto;
 import com.brainstrom.meokjang.deal.domain.Deal;
 import com.brainstrom.meokjang.deal.repository.DealRepository;
+import com.brainstrom.meokjang.notice.dto.FCMNotificationRequestDto;
+import com.brainstrom.meokjang.notice.service.FCMNotificationService;
 import com.brainstrom.meokjang.review.domain.Review;
 import com.brainstrom.meokjang.review.dto.request.ReviewRequest;
 import com.brainstrom.meokjang.review.dto.response.ReviewResponse;
 import com.brainstrom.meokjang.review.repository.ReviewRepository;
 import com.brainstrom.meokjang.user.domain.User;
 import com.brainstrom.meokjang.user.repository.UserRepository;
+import com.brainstrom.meokjang.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Transactional
 public class ReviewService {
 
+    private final FCMNotificationService noticeService;
     private final ReviewRepository reviewRepository;
     private final DealRepository dealRepository;
     private final UserRepository userRepository;
 
-    public ReviewService(ReviewRepository reviewRepository,
+    public ReviewService(FCMNotificationService noticeService,
+                         ReviewRepository reviewRepository,
                          DealRepository dealRepository,
                          UserRepository userRepository) {
+        this.noticeService = noticeService;
         this.reviewRepository = reviewRepository;
         this.dealRepository = dealRepository;
         this.userRepository = userRepository;
@@ -54,7 +58,26 @@ public class ReviewService {
                     .build();
             reviewRepository.save(review);
             updateReliability(reviewTo.getUserId(), reviewRequest.getRating());
+            sendNotice(dealId, reviewRequest, noticeService);
         }
+    }
+
+    public void sendNotice(Long dealId, ReviewRequest reviewRequest, FCMNotificationService noticeService) {
+        Map<String, String> data = new HashMap<>();
+        data.put("type", String.valueOf(reviewRepository.countByDealId(dealId)));
+        data.put("sender", String.valueOf(reviewRequest.getReviewFrom()));
+
+//        Deal deal = dealRepository.findById(dealId).orElseThrow(() -> new IllegalStateException("존재하지 않는 거래입니다."));
+        User user = userRepository.findById(reviewRequest.getReviewFrom()).orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
+        String reviewFrom = user.getUserName();
+
+        FCMNotificationRequestDto noticeRequestDto = FCMNotificationRequestDto.builder()
+                .targetUserId(reviewRequest.getReviewTo())
+                .title("후기가 도착했어요!")
+                .body("\\uD83D\\uDCE9 " + reviewFrom + "님으로부터 도착한 후기를 확인해보세요")
+                .data(data)
+                .build();
+        noticeService.sendNotificationByToken(noticeRequestDto);
     }
 
     public Map<String, List<ReviewResponse>> getReviewList(Long userId) {

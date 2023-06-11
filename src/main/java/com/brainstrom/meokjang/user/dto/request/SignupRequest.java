@@ -15,6 +15,7 @@ public class SignupRequest {
     private Double latitude;
     private Double longitude;
     private Integer gender;
+    private String firebaseToken;
 
     public User toEntity() {
         return User.builder()
@@ -27,6 +28,7 @@ public class SignupRequest {
                 .longitude(longitude)
                 .gender(gender)
                 .reliability(50F)
+                .firebaseToken(firebaseToken)
                 .build();
     }
 }
