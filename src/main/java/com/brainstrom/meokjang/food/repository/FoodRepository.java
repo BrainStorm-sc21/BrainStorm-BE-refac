@@ -10,6 +10,7 @@ public interface FoodRepository extends JpaRepository<Food, Long>{
 
     Optional<Food> findById(Long foodId);
     List<Food> findAllByUserId(Long userId);
+    List<Food> findAllByUserIdThanOrderByExpireDate(Long userId);
     Food save(Food food);
     void deleteById(Long foodId);
 }

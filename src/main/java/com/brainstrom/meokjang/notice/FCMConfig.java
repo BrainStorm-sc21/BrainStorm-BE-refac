@@ -20,7 +20,8 @@ import java.util.Scanner;
 public class FCMConfig {
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        FileInputStream refreshToken = new FileInputStream("./src/main/resources/firebase-adminsdk.json");
+        ClassPathResource resource = new ClassPathResource("firebase-adminsdk.json");
+        InputStream refreshToken = resource.getInputStream();
 
         FirebaseApp firebaseApp = null;
         List<FirebaseApp> firebaseAppList = FirebaseApp.getApps();
