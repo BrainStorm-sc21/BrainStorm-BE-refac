@@ -11,10 +11,14 @@ public class DealRequest {
     private final Integer dealType;
     private final String dealName;
     private final String dealContent;
-    private final MultipartFile image1;
-    private final MultipartFile image2;
-    private final MultipartFile image3;
-    private final MultipartFile image4;
+    @Builder.Default
+    private MultipartFile image1 = null;
+    @Builder.Default
+    private MultipartFile image2 = null;
+    @Builder.Default
+    private MultipartFile image3 = null;
+    @Builder.Default
+    private MultipartFile image4 = null;
 
     @Builder
     public DealRequest(Long userId, Integer dealType, String dealName, String dealContent,
