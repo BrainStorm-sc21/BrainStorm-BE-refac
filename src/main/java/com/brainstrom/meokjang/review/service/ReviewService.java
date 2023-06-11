@@ -78,7 +78,7 @@ public class ReviewService {
         FCMNotificationRequestDto noticeRequestDto = FCMNotificationRequestDto.builder()
                 .targetUserId(reviewRequest.getReviewTo())
                 .title("후기가 도착했어요!")
-                .body("\\uD83D\\uDCE9 " + reviewFrom + "님으로부터 도착한 후기를 확인해보세요")
+                .body("\uD83D\uDCE9 " + reviewFrom + "님으로부터 도착한 후기를 확인해보세요")
                 .data(data)
                 .build();
         noticeService.sendNotificationByToken(noticeRequestDto);
