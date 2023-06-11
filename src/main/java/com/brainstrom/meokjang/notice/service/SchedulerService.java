@@ -31,11 +31,13 @@ public class SchedulerService {
     @Scheduled(cron = "0 * * * * ?")
     public void run() {
         expireNotice();
+        System.out.println("스케줄러 동작");
     }
 
     public void expireNotice() {
         userService.getUserList().forEach(user -> {
-            for(Food food:foodRepo.findAllByUserIdThanOrderByExpireDate(user.getUserId())) {
+            System.out.println("유저 아이디: "+user.getUserId());
+            for(Food food:foodRepo.findAllByUserIdOrderByExpireDateAsc(user.getUserId())) {
                 if (food.getExpireDate().isBefore(LocalDate.now())) {
                     sendNotice(food, "유통기한이 지났습니다!");
                     break;
@@ -62,5 +64,6 @@ public class SchedulerService {
                 .data(data)
                 .build();
         noticeService.sendNotificationByToken(noticeRequestDto);
+        System.out.println("유통기한 알림 전송");
     }
 }
