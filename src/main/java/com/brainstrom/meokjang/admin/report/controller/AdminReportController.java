@@ -1,5 +1,6 @@
 package com.brainstrom.meokjang.admin.report.controller;
 
+import com.brainstrom.meokjang.admin.auth.dto.HandleReportForm;
 import com.brainstrom.meokjang.admin.report.dto.AdminReport;
 import com.brainstrom.meokjang.admin.report.dto.AdminReportDetail;
 import com.brainstrom.meokjang.admin.report.service.AdminReportService;
@@ -10,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -38,7 +38,8 @@ public class AdminReportController {
     @GetMapping("/admin/report/{reportId}")
     public String adminReportDetail(@PathVariable Long reportId, Model model, HttpSession httpSession) {
         if (validSession(httpSession)) {
-            AdminReportDetail adminReportDetail = adminReportService.getReportDetail(reportId);
+            String adminName = (String) httpSession.getAttribute("canAccessAdminPage");
+            AdminReportDetail adminReportDetail = adminReportService.getReportDetail(reportId, adminName);
             model.addAttribute("report", adminReportDetail);
             return "adminReportDetail";
         } else {
@@ -47,10 +48,9 @@ public class AdminReportController {
     }
 
     @PostMapping("/admin/handleReport")
-    public String handleReport(@RequestParam("reportId") Long reportId, @RequestParam("suspensionDays") int suspensionDays,
-                               HttpSession httpSession) {
+    public String handleReport(HandleReportForm handleReportForm, HttpSession httpSession) {
         if (validSession(httpSession)) {
-            adminReportService.handleReport(reportId, suspensionDays);
+            adminReportService.handleReport(handleReportForm);
             return "redirect:/admin/report";
         } else {
             return "redirect:/admin";

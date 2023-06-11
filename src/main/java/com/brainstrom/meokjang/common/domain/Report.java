@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Table(schema = "REPORT")
@@ -46,5 +45,11 @@ public class Report {
         this.reportedUser = reportedUser;
         this.reportText = reportText;
         this.isHandled = false;
+    }
+
+    public void handleReport(Admin AdminName, LocalDateTime now) {
+        this.isHandled = true;
+        this.handledBy = AdminName.getAdminId();
+        this.handledAt = now;
     }
 }

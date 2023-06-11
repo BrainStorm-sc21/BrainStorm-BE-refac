@@ -72,4 +72,8 @@ public class User {
         this.stopUntil = stopUntil;
         this.firebaseToken = firebaseToken;
     }
+
+    public void suspend(int suspensionDays) {
+        this.stopUntil = LocalDate.now().plusDays(suspensionDays);
+    }
 }

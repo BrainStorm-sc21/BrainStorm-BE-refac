@@ -19,11 +19,12 @@ public class AdminReportDetail {
     private String handledBy;
     private LocalDateTime handledAt;
     private LocalDateTime createdAt;
+    private String currAdmin;
 
     public AdminReportDetail(Long reportId, Long reportingUser, String reportingUserName,
                              Long reportedUser, String reportedUserName,
                              String reportText, Boolean isHandled, String handledBy,
-                             LocalDateTime handledAt, LocalDateTime createdAt) {
+                             LocalDateTime handledAt, LocalDateTime createdAt, String currAdmin) {
         this.reportId = reportId;
         this.reportingUser = reportingUser;
         this.reportingUserName = reportingUserName;
@@ -34,5 +35,6 @@ public class AdminReportDetail {
         this.handledBy = handledBy;
         this.handledAt = handledAt;
         this.createdAt = createdAt;
+        this.currAdmin = currAdmin;
     }
 }

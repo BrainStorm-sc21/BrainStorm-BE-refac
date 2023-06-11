@@ -50,7 +50,7 @@
             <td colspan="3"><input type="number" id="suspensionDays" name="suspensionDays" min="0" required></td>
         </tr>
         <input type="hidden" name="reportId" th:value="${report.reportId}"/>
-<!--        <input type="hidden" name="adminId" th:value="${report.}"/>-->
+        <input type="hidden" name="adminName" th:value="${report.currAdmin}"/>
         <tr>
             <td colspan="4"><button type="submit">신고 처리</button></td>
         </tr>
