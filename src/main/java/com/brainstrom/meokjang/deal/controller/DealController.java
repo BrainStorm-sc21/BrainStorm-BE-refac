@@ -37,19 +37,17 @@ public class DealController {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 생성 실패", result.getAllErrors()));
         }
         try {
-            dealService.save(dealRequest);
-            ApiResponse res = new ApiResponse(200, "거래 생성 성공", null);
+            ApiResponse res = new ApiResponse(200, "거래 생성 성공", dealService.save(dealRequest));
             return ResponseEntity.ok(res);
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "거래 생성 실패", e.getMessage()));
         }
     }
 
-    @GetMapping("/deal/{dealId}/{userId}")
-    public ResponseEntity<ApiResponse> getDealInfo(@PathVariable Long dealId, @PathVariable Long userId) {
-
+    @GetMapping("/deal/{dealId}")
+    public ResponseEntity<ApiResponse> getDealInfo(@PathVariable Long dealId) {
         try {
-            DealInfoResponse dealInfoResponse = dealService.getDealInfo(dealId, userId);
+            DealInfoResponse dealInfoResponse = dealService.getDealInfo(dealId);
             ApiResponse res = new ApiResponse(200, "거래 정보 조회 성공", dealInfoResponse);
             return ResponseEntity.ok(res);
         } catch (IllegalStateException e) {

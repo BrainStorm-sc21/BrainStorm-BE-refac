@@ -21,7 +21,7 @@ public class UserService {
     }
 
     public UserInfoResponse getUserInfo(Long userId) {
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
         return new UserInfoResponse(user.getUserId(), user.getUserName(), user.getLocation(), user.getLatitude(),
                 user.getLongitude(), user.getReliability(), user.getStopUntil());
@@ -32,7 +32,7 @@ public class UserService {
         if (result != 1) {
             throw new IllegalStateException("유저 정보 수정에 실패하였습니다.");
         }
-        User updateUser = userRepository.findByUserId(userId)
+        User updateUser = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 유저입니다."));
         return new UserInfoResponse(updateUser.getUserId(), userName, updateUser.getLocation(),
                 updateUser.getLatitude(), updateUser.getLongitude(), updateUser.getReliability(), updateUser.getStopUntil());
