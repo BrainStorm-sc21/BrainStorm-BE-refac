@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -18,7 +19,7 @@ public class FCMConfig {
     FirebaseMessaging firebaseMessaging() throws IOException {
         ClassPathResource resource = new ClassPathResource("firebase-adminsdk.json");
         System.out.println(resource.getFilename());
-        InputStream refreshToken = resource.getInputStream();
+        InputStream refreshToken = new FileInputStream(resource.getFile());
         System.out.println(refreshToken);
 
         FirebaseApp firebaseApp = null;
