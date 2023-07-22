@@ -19,19 +19,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "user_name", length = 6, nullable = false, unique = true)
     private String userName;
 
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number", length = 11, nullable = false,unique = true)
     private String phoneNumber;
 
-    @Column(name = "sns_type")
-    private String snsType;
-
-    @Column(name = "sns_key", unique = true)
-    private String snsKey;
-
-    @Column(name = "location", nullable = false)
+    @Column(name = "location", length = 40, nullable = false)
     private String location;
 
     @Column(name = "latitude", nullable = false)
@@ -40,16 +34,13 @@ public class User {
     @Column(name = "longitude", nullable = false)
     private Double longitude;
 
-    @Column(name = "gender", nullable = false)
-    private Integer gender;
-
     @Column(name = "reliability", nullable = false)
     private Float reliability;
 
     @Column(name = "stop_until")
     private LocalDate stopUntil;
 
-    @Column(name = "firebase_token")
+    @Column(name = "firebase_token", length = 255, nullable = false, unique = true)
     private String firebaseToken;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -57,17 +48,14 @@ public class User {
     private LocalDateTime createdAt;
 
     @Builder
-    public User(Long userId, String userName, String phoneNumber, String snsType, String snsKey, String location,
-                Double latitude, Double longitude, Integer gender, Float reliability, LocalDate stopUntil, String firebaseToken) {
+    public User(Long userId, String userName, String phoneNumber, String location, Double latitude, Double longitude,
+                Float reliability, LocalDate stopUntil, String firebaseToken) {
         this.userId = userId;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
-        this.snsType = snsType;
-        this.snsKey = snsKey;
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.gender = gender;
         this.reliability = reliability;
         this.stopUntil = stopUntil;
         this.firebaseToken = firebaseToken;

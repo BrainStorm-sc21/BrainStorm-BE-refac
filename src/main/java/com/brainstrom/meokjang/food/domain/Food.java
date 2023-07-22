@@ -10,29 +10,34 @@ import java.time.LocalDateTime;
 @Entity
 @Table(schema = "FOOD")
 @Getter
-@Setter
-@ToString
 @NoArgsConstructor
 public class Food {
+
     @Id @Column(name = "food_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long foodId;
-    @Column(name = "user_id")
-    private Long userId;
-    @Column(name = "food_name")
+    private Integer foodId;
+
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
+
+    @Column(name = "food_name", length = 30, nullable = false)
     private String foodName;
-    @Column(name = "stock")
-    private Double stock;
+
+    @Column(name = "stock", nullable = false)
+    private Float stock;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "expire_date")
+    @Column(name = "expire_date", nullable = false)
     private LocalDate expireDate;
-    @Column(name = "storage_way")
-    private String storageWay;
+
+    @Column(name = "storage_way", nullable = false)
+    private Byte storageWay;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Food(Long userId, String foodName, Double stock, String expireDate, String storageWay) {
+    public Food(Integer userId, String foodName, Float stock, String expireDate, Byte storageWay) {
         this.userId = userId;
         this.foodName = foodName;
         this.stock = stock;

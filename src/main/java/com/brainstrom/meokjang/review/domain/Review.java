@@ -16,16 +16,16 @@ public class Review {
 
     @Id @Column(name = "review_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Integer reviewId;
 
     @Column(name = "review_from", nullable = false)
-    private Long reviewFrom;
+    private Integer reviewFrom;
 
     @Column(name = "review_to", nullable = false)
-    private Long reviewTo;
+    private Integer reviewTo;
 
     @Column(name = "deal_id", nullable = false)
-    private Long dealId;
+    private Integer dealId;
 
     @Column(name = "rating", nullable = false)
     private Float rating;
@@ -38,7 +38,7 @@ public class Review {
     private LocalDateTime createdAt;
 
     @Builder
-    public Review(Long reviewFrom, Long reviewTo, Long dealId, Float rating, String reviewContent) {
+    public Review(Integer reviewFrom, Integer reviewTo, Integer dealId, Float rating, String reviewContent) {
         this.reviewFrom = reviewFrom;
         this.reviewTo = reviewTo;
         this.dealId = dealId;

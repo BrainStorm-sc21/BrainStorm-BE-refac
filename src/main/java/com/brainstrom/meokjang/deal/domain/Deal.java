@@ -19,13 +19,13 @@ public class Deal {
 
     @Id @Column(name = "deal_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dealId;
+    private Integer dealId;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private Integer userId;
 
     @Column(name = "deal_type", nullable = false)
-    private Integer dealType;
+    private Byte dealType;
 
     @Column(name = "deal_name", length = 30, nullable = false)
     private String dealName;
@@ -42,22 +42,10 @@ public class Deal {
     @Column(name = "longitude", nullable = false)
     private Double longitude;
 
-    @Column(name = "image1", length = 255)
-    private String image1;
-
-    @Column(name = "image2", length = 255)
-    private String image2;
-
-    @Column(name = "image3", length = 255)
-    private String image3;
-
-    @Column(name = "image4", length = 255)
-    private String image4;
-
-    @Column(name = "is_closed")
+    @Column(name = "is_closed", nullable = false)
     private Boolean isClosed;
 
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -68,7 +56,7 @@ public class Deal {
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     @Builder
-    public Deal(Long userId, Integer dealType, String dealName, String dealContent, String location, Double latitude,
+    public Deal(Integer userId, Byte dealType, String dealName, String dealContent, String location, Double latitude,
                 Double longitude, String image1, String image2, String image3, String image4, Boolean isClosed,
                 Boolean isDeleted) {
         this.userId = userId;
@@ -78,23 +66,19 @@ public class Deal {
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.image1 = image1;
-        this.image2 = image2;
-        this.image3 = image3;
-        this.image4 = image4;
         this.isClosed = isClosed;
         this.isDeleted = isDeleted;
     }
 
-    public void update(Integer dealType, String dealName, String dealContent, String[] imageList) {
-        this.dealType = dealType;
-        this.dealName = dealName;
-        this.dealContent = dealContent;
-        this.image1 = imageList[0];
-        this.image2 = imageList[1];
-        this.image3 = imageList[2];
-        this.image4 = imageList[3];
-    }
+//    public void update(Integer dealType, String dealName, String dealContent, String[] imageList) {
+//        this.dealType = dealType;
+//        this.dealName = dealName;
+//        this.dealContent = dealContent;
+//        this.image1 = imageList[0];
+//        this.image2 = imageList[1];
+//        this.image3 = imageList[2];
+//        this.image4 = imageList[3];
+//    }
 
     public void complete() {
         this.isClosed = true;
@@ -104,7 +88,7 @@ public class Deal {
         this.isDeleted = true;
     }
 
-    public String[] getImageList() {
-        return new String[]{image1, image2, image3, image4};
-    }
+//    public String[] getImageList() {
+//        return new String[]{image1, image2, image3, image4};
+//    }
 }

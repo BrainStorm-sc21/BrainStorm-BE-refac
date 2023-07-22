@@ -16,40 +16,40 @@ public class Report {
 
     @Id @Column(name = "report_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reportId;
+    private Integer reportId;
 
-    @Column(name = "reporting_user", nullable = false)
-    private Long reportingUser;
+    @Column(name = "report_from", nullable = false)
+    private Integer reportFrom;
 
-    @Column(name = "reported_user", nullable = false)
-    private Long reportedUser;
+    @Column(name = "report_to", nullable = false)
+    private Integer reportTo;
 
-    @Column(name = "report_text", length = 300)
-    private String reportText;
+    @Column(name = "report_content", length = 300)
+    private String reportContent;
 
     @Column(name = "is_handled", nullable = false)
     private Boolean isHandled;
 
     @Column(name = "handled_by")
-    private Long handledBy;
+    private Integer handledBy;
 
-    @Column(name = "handled_at")
-    private LocalDateTime handledAt;
+    @Column(name = "handled_date")
+    private LocalDateTime handledDate;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Report(Long reportingUser, Long reportedUser, String reportText) {
-        this.reportingUser = reportingUser;
-        this.reportedUser = reportedUser;
-        this.reportText = reportText;
+    public Report(Integer reportFrom, Integer reportTo, String reportContent) {
+        this.reportFrom = reportFrom;
+        this.reportTo = reportTo;
+        this.reportContent = reportContent;
         this.isHandled = false;
     }
 
     public void handleReport(Admin AdminName, LocalDateTime now) {
         this.isHandled = true;
         this.handledBy = AdminName.getAdminId();
-        this.handledAt = now;
+        this.handledDate = now;
     }
 }

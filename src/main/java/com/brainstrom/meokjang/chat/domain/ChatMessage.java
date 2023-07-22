@@ -4,27 +4,27 @@ import com.brainstrom.meokjang.chat.dto.ChatMessageDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 @Table(schema = "CHAT_MESSAGE")
+@Getter
+@NoArgsConstructor
 public class ChatMessage {
-    @Id
+
+    @Id @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_id")
-    private Long id;
+    private Integer chatId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "chatRoom_id")
+    @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 
-    private Long sender;
+    @Column(nullable = false)
+    private Integer sender;
 
-    @Column
+    @Column(nullable = false, length = 300)
     private String message;
 
     @Column
@@ -32,11 +32,10 @@ public class ChatMessage {
 
     public static ChatMessage toEntity(ChatMessageDto chatMessageDTO, ChatRoom chatRoom){
         ChatMessage chatMessageEntity = new ChatMessage();
-        chatMessageEntity.setChatRoom(chatRoom);
-        chatMessageEntity.setSender(chatMessageDTO.getSender());
-        chatMessageEntity.setMessage(chatMessageDTO.getMessage());
-        chatMessageEntity.setTime(chatMessageDTO.getTime());
+//        chatMessageEntity.setChatRoom(chatRoom);
+//        chatMessageEntity.setSender(chatMessageDTO.getSender());
+//        chatMessageEntity.setMessage(chatMessageDTO.getMessage());
+//        chatMessageEntity.setTime(chatMessageDTO.getTime());
         return chatMessageEntity;
-
     }
 }

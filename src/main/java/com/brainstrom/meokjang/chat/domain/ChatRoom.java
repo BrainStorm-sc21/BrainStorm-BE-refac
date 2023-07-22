@@ -17,39 +17,34 @@ import java.util.List;
 @AllArgsConstructor
 @Table(schema = "CHAT_ROOM")
 public class ChatRoom {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chatRoom_id")
-    private Long id;
+    @Column(name = "cr_id")
+    private Integer crId;
 
-    @Column
+    @Column(name = "room_id", nullable = false, unique = true, length = 25)
     private String roomId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "deal_id")
     private Deal deal;
 
-    @Column
-    private Long sender;
-
-    @Column
-    private Long receiver;
-
-    @Column
+    @Column(name = "last_massage", nullable = false, length = 300)
     private String lastMessage;
 
-    @Column
+    @Column(name = "last_time", nullable = false)
     private LocalDateTime lastTime;
 
-    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatMessage> chatMessageList = new ArrayList<>();
+//    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ChatMessage> chatMessageList = new ArrayList<>();
 
     public static ChatRoom toEntity(ChatRoomDto chatRoomDto, Deal deal){
         ChatRoom chatRoomEntity = new ChatRoom();
         chatRoomEntity.setRoomId(chatRoomDto.getRoomId());
         chatRoomEntity.setDeal(deal);
-        chatRoomEntity.setSender(chatRoomDto.getSender());
-        chatRoomEntity.setReceiver(chatRoomDto.getReceiver());
+//        chatRoomEntity.setSender(chatRoomDto.getSender());
+//        chatRoomEntity.setReceiver(chatRoomDto.getReceiver());
         return chatRoomEntity;
     }
 }
