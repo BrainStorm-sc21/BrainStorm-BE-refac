@@ -14,8 +14,9 @@ public class DealImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long diId;
 
-    @Column(name = "deal_id", nullable = false)
-    private Long dealId;
+    @ManyToOne
+    @JoinColumn(name = "deal_id", referencedColumnName = "deal_id", nullable = false)
+    private Deal deal;
 
     @Column(name = "image") @Lob
     private byte[] image;

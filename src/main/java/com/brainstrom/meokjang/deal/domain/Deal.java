@@ -1,6 +1,8 @@
 package com.brainstrom.meokjang.deal.domain;
 
 import com.brainstrom.meokjang.chat.domain.ChatRoom;
+import com.brainstrom.meokjang.review.domain.Review;
+import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +23,9 @@ public class Deal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dealId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "deal_type", nullable = false)
     private Byte dealType;
@@ -55,10 +58,16 @@ public class Deal {
     @OneToMany(mappedBy = "deal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "deal")
+    private List<DealImage> dealImageList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "deal")
+    private List<Review> reviewList = new ArrayList<>();
+
     @Builder
-    public Deal(Long userId, Byte dealType, String dealName, String dealContent, String location,
+    public Deal(User user, Byte dealType, String dealName, String dealContent, String location,
                 Double latitude, Double longitude, Boolean isClosed, Boolean isDeleted) {
-        this.userId = userId;
+        this.user = user;
         this.dealType = dealType;
         this.dealName = dealName;
         this.dealContent = dealContent;

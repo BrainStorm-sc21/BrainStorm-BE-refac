@@ -1,11 +1,15 @@
 package com.brainstrom.meokjang.admin.auth.domain;
 
+import com.brainstrom.meokjang.common.domain.Report;
+import com.google.firebase.database.core.Repo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(schema = "ADMIN")
@@ -26,4 +30,7 @@ public class Admin {
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "handledBy")
+    List<Report> reportList = new ArrayList<>();
 }

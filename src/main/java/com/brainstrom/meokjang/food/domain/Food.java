@@ -1,5 +1,6 @@
 package com.brainstrom.meokjang.food.domain;
 
+import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,8 +18,9 @@ public class Food {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long foodId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "food_name", length = 30, nullable = false)
     private String foodName;
@@ -37,8 +39,8 @@ public class Food {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Food(Long userId, String foodName, Float stock, String expireDate, Byte storageWay) {
-        this.userId = userId;
+    public Food(User user, String foodName, Float stock, String expireDate, Byte storageWay) {
+        this.user = user;
         this.foodName = foodName;
         this.stock = stock;
         this.expireDate = LocalDate.parse(expireDate);

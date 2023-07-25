@@ -1,5 +1,11 @@
 package com.brainstrom.meokjang.user.domain;
 
+import com.brainstrom.meokjang.chat.domain.ChatRoomUser;
+import com.brainstrom.meokjang.common.domain.Report;
+import com.brainstrom.meokjang.deal.domain.Deal;
+import com.brainstrom.meokjang.food.domain.Food;
+import com.brainstrom.meokjang.notice.domain.Notice;
+import com.brainstrom.meokjang.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +14,10 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(schema = "USER")
@@ -46,6 +56,30 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "reportFrom")
+    private List<Report> reportFromList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reportTo")
+    private List<Report> reportToList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Food> foodList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Deal> dealList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chatUser")
+    private List<ChatRoomUser> chatRoomUserList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Notice> noticeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewFrom")
+    private List<Review> reviewFromList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewTo")
+    private List<Review> reviewToList = new ArrayList<>();
 
     @Builder
     public User(Long userId, String userName, String phoneNumber, String location, Double latitude, Double longitude,

@@ -1,5 +1,6 @@
 package com.brainstrom.meokjang.chat.domain;
 
+import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,11 @@ public class ChatRoomUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cruId;
 
-    @Column(name = "room_id", nullable = false, length = 25)
-    private String roomId;
+    @ManyToOne
+    @JoinColumn(name = "room_id", referencedColumnName = "room_id", nullable = false)
+    private ChatRoom chatRoom;
 
-    @Column(name = "chat_user_id", nullable = false)
-    private Long chatUserId;
+    @ManyToOne
+    @JoinColumn(name = "chat_user_id", referencedColumnName = "user_id", nullable = false)
+    private User chatUser;
 }

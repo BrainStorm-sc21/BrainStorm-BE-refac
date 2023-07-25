@@ -1,6 +1,7 @@
 package com.brainstrom.meokjang.common.domain;
 
 import com.brainstrom.meokjang.admin.auth.domain.Admin;
+import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +19,13 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
-    @Column(name = "report_from", nullable = false)
-    private Long reportFrom;
+    @ManyToOne
+    @JoinColumn(name = "report_from", referencedColumnName = "user_id", nullable = false)
+    private User reportFrom;
 
-    @Column(name = "report_to", nullable = false)
-    private Long reportTo;
+    @ManyToOne
+    @JoinColumn(name = "report_to", referencedColumnName = "user_id", nullable = false)
+    private User reportTo;
 
     @Column(name = "report_content", length = 300)
     private String reportContent;
@@ -30,8 +33,9 @@ public class Report {
     @Column(name = "is_handled", nullable = false)
     private Boolean isHandled;
 
-    @Column(name = "handled_by")
-    private Long handledBy;
+    @ManyToOne
+    @JoinColumn(name = "handled_by", referencedColumnName = "admin_id")
+    private Admin handledBy;
 
     @Column(name = "handled_date")
     private LocalDateTime handledDate;
@@ -40,16 +44,16 @@ public class Report {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Report(Long reportFrom, Long reportTo, String reportContent) {
+    public Report(User reportFrom, User reportTo, String reportContent) {
         this.reportFrom = reportFrom;
         this.reportTo = reportTo;
         this.reportContent = reportContent;
         this.isHandled = false;
     }
 
-    public void handleReport(Admin AdminName, LocalDateTime now) {
+    public void handleReport(Admin admin, LocalDateTime now) {
         this.isHandled = true;
-        this.handledBy = AdminName.getAdminId();
+        this.handledBy = admin;
         this.handledDate = now;
     }
 }
