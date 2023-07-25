@@ -1,7 +1,6 @@
 package com.brainstrom.meokjang.admin.auth.domain;
 
 import com.brainstrom.meokjang.common.domain.Report;
-import com.google.firebase.database.core.Repo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

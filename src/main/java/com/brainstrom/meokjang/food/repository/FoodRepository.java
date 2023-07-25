@@ -3,7 +3,6 @@ package com.brainstrom.meokjang.food.repository;
 import com.brainstrom.meokjang.food.domain.Food;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 

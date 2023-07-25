@@ -1,6 +1,5 @@
 package com.brainstrom.meokjang.chat.domain;
 
-import com.brainstrom.meokjang.chat.dto.ChatRoomDto;
 import com.brainstrom.meokjang.deal.domain.Deal;
 import jakarta.persistence.*;
 import lombok.*;
