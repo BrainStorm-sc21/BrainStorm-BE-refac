@@ -12,16 +12,16 @@ public class Notice {
 
     @Id @Column(name = "notice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer noticeId;
+    private Long noticeId;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "link_type", nullable = false)
     private Byte linkType;
 
     @Column(name = "link_id")
-    private Integer linkId;
+    private Long linkId;
 
     @Column(name = "title", length = 45)
     private String title;

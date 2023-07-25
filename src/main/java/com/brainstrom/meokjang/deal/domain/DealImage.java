@@ -12,10 +12,10 @@ public class DealImage {
 
     @Id @Column(name = "di_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer diId;
+    private Long diId;
 
     @Column(name = "deal_id", nullable = false)
-    private Integer dealId;
+    private Long dealId;
 
     @Column(name = "image") @Lob
     private byte[] image;

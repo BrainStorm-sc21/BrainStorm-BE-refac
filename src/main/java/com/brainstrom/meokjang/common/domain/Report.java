@@ -16,13 +16,13 @@ public class Report {
 
     @Id @Column(name = "report_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer reportId;
+    private Long reportId;
 
     @Column(name = "report_from", nullable = false)
-    private Integer reportFrom;
+    private Long reportFrom;
 
     @Column(name = "report_to", nullable = false)
-    private Integer reportTo;
+    private Long reportTo;
 
     @Column(name = "report_content", length = 300)
     private String reportContent;
@@ -31,7 +31,7 @@ public class Report {
     private Boolean isHandled;
 
     @Column(name = "handled_by")
-    private Integer handledBy;
+    private Long handledBy;
 
     @Column(name = "handled_date")
     private LocalDateTime handledDate;
@@ -40,7 +40,7 @@ public class Report {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Report(Integer reportFrom, Integer reportTo, String reportContent) {
+    public Report(Long reportFrom, Long reportTo, String reportContent) {
         this.reportFrom = reportFrom;
         this.reportTo = reportTo;
         this.reportContent = reportContent;

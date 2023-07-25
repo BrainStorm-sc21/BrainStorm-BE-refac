@@ -12,11 +12,11 @@ public class ChatRoomUser {
 
     @Id @Column(name = "cru_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cruId;
+    private Long cruId;
 
     @Column(name = "room_id", nullable = false, length = 25)
     private String roomId;
 
     @Column(name = "chat_user_id", nullable = false)
-    private Integer chatUserId;
+    private Long chatUserId;
 }

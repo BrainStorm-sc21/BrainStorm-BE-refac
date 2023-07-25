@@ -15,14 +15,14 @@ public class ChatMessage {
 
     @Id @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer chatId;
+    private Long chatId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 
     @Column(nullable = false)
-    private Integer sender;
+    private Long sender;
 
     @Column(nullable = false, length = 300)
     private String message;

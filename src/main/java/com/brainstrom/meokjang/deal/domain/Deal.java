@@ -19,10 +19,10 @@ public class Deal {
 
     @Id @Column(name = "deal_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer dealId;
+    private Long dealId;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "deal_type", nullable = false)
     private Byte dealType;
@@ -56,9 +56,8 @@ public class Deal {
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     @Builder
-    public Deal(Integer userId, Byte dealType, String dealName, String dealContent, String location, Double latitude,
-                Double longitude, String image1, String image2, String image3, String image4, Boolean isClosed,
-                Boolean isDeleted) {
+    public Deal(Long userId, Byte dealType, String dealName, String dealContent, String location,
+                Double latitude, Double longitude, Boolean isClosed, Boolean isDeleted) {
         this.userId = userId;
         this.dealType = dealType;
         this.dealName = dealName;
@@ -70,7 +69,7 @@ public class Deal {
         this.isDeleted = isDeleted;
     }
 
-//    public void update(Integer dealType, String dealName, String dealContent, String[] imageList) {
+//    public void update(Byte dealType, String dealName, String dealContent, String[] imageList) {
 //        this.dealType = dealType;
 //        this.dealName = dealName;
 //        this.dealContent = dealContent;

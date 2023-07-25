@@ -15,10 +15,10 @@ public class Food {
 
     @Id @Column(name = "food_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer foodId;
+    private Long foodId;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "food_name", length = 30, nullable = false)
     private String foodName;
@@ -37,7 +37,7 @@ public class Food {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Food(Integer userId, String foodName, Float stock, String expireDate, Byte storageWay) {
+    public Food(Long userId, String foodName, Float stock, String expireDate, Byte storageWay) {
         this.userId = userId;
         this.foodName = foodName;
         this.stock = stock;
