@@ -16,13 +16,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ChatMessage {
 
-    @Id @Column(name = "chat_id")
+    @Id @Column(name = "chat_message_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatId;
+    private Long chatMessageId;
 
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "room_id", nullable = false)
-    private ChatRoom chatRoom;
+    private ChatRoom room;
 
     @ManyToOne
     @JoinColumn(name = "sender", referencedColumnName = "user_id", nullable = false)
@@ -34,12 +34,12 @@ public class ChatMessage {
     @Column
     private LocalDateTime time;
 
-    public static ChatMessage toEntity(ChatMessageDto chatMessageDto, ChatRoom chatRoom, User sender){
-        ChatMessage chatMessageEntity = new ChatMessage();
-        chatMessageEntity.setChatRoom(chatRoom);
-        chatMessageEntity.setSender(sender);
-        chatMessageEntity.setMessage(chatMessageDto.getMessage());
-        chatMessageEntity.setTime(chatMessageDto.getTime());
-        return chatMessageEntity;
-    }
+//    public static ChatMessage toEntity(ChatMessageDto chatMessageDto, ChatRoom chatRoom, User sender){
+//        ChatMessage chatMessageEntity = new ChatMessage();
+//        chatMessageEntity.setChatRoom(chatRoom);
+//        chatMessageEntity.setSender(sender);
+//        chatMessageEntity.setMessage(chatMessageDto.getMessage());
+//        chatMessageEntity.setTime(chatMessageDto.getTime());
+//        return chatMessageEntity;
+//    }
 }

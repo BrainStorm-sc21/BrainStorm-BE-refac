@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DealImage {
 
-    @Id @Column(name = "di_id")
+    @Id @Column(name = "deal_image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long diId;
+    private Long dealImageId;
 
     @ManyToOne
     @JoinColumn(name = "deal_id", referencedColumnName = "deal_id", nullable = false)

@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatRoomUser {
 
-    @Id @Column(name = "cru_id")
+    @Id @Column(name = "chat_room_user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cruId;
+    private Long chatRoomUserId;
 
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "room_id", nullable = false)
-    private ChatRoom chatRoom;
+    private ChatRoom room;
 
     @ManyToOne
-    @JoinColumn(name = "chat_user_id", referencedColumnName = "user_id", nullable = false)
-    private User chatUser;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;
 }

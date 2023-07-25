@@ -27,7 +27,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "user_name", length = 6, nullable = false, unique = true)
+    @Column(name = "user_name", length = 8, nullable = false, unique = true)
     private String userName;
 
     @Column(name = "phone_number", length = 11, nullable = false,unique = true)
@@ -48,7 +48,7 @@ public class User {
     @Column(name = "stop_until")
     private LocalDate stopUntil;
 
-    @Column(name = "firebase_token", length = 255, nullable = false, unique = true)
+    @Column(name = "firebase_token", nullable = false, unique = true)
     private String firebaseToken;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -67,7 +67,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Deal> dealList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chatUser")
+    @OneToMany(mappedBy = "user")
     private List<ChatRoomUser> chatRoomUserList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
