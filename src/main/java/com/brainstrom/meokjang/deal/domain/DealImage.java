@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(schema = "DealImage")
+@Table(schema = "DEAL_IMAGE")
 @Getter
 @NoArgsConstructor
 public class DealImage {
