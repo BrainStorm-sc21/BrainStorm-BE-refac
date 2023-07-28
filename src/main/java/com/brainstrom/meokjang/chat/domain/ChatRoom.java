@@ -17,28 +17,27 @@ import java.util.List;
 @Table(schema = "CHAT_ROOM")
 public class ChatRoom {
 
-    @Id
+    @Id @Column(name = "chat_room_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_room_id")
     private Long crId;
 
-    @Column(name = "room_id", nullable = false, unique = true, length = 25)
+    @Column(name = "room_id", length = 25, nullable = false, unique = true)
     private String roomId;
 
     @ManyToOne
     @JoinColumn(name = "deal_id", referencedColumnName = "deal_id", nullable = false)
     private Deal deal;
 
-    @Column(name = "last_massage", nullable = false, length = 300)
+    @Column(name = "last_massage", length = 300)
     private String lastMessage;
 
-    @Column(name = "last_time", nullable = false)
+    @Column(name = "last_time")
     private LocalDateTime lastTime;
 
-    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<ChatRoomUser> chatRoomUserList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 
 //    public static ChatRoom toEntity(ChatRoomDto chatRoomDto, Deal deal) {

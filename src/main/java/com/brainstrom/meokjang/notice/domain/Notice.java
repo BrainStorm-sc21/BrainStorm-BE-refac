@@ -25,9 +25,9 @@ public class Notice {
     @Column(name = "link_id")
     private Long linkId;
 
-    @Column(name = "title", length = 45)
+    @Column(name = "title", length = 15, nullable = false)
     private String title;
 
-    @Column(name = "body", length = 45)
+    @Column(name = "body", length = 45, nullable = false)
     private String body;
 }

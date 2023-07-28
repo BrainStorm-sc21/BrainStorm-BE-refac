@@ -27,7 +27,7 @@ public class Report {
     @JoinColumn(name = "report_to", referencedColumnName = "user_id", nullable = false)
     private User reportTo;
 
-    @Column(name = "report_content", length = 300)
+    @Column(name = "report_content", length = 300, nullable = false)
     private String reportContent;
 
     @Column(name = "is_handled", nullable = false)

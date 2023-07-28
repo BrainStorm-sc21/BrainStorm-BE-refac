@@ -30,7 +30,7 @@ public class User {
     @Column(name = "user_name", length = 8, nullable = false, unique = true)
     private String userName;
 
-    @Column(name = "phone_number", length = 11, nullable = false,unique = true)
+    @Column(name = "phone_number", length = 11, nullable = false, unique = true)
     private String phoneNumber;
 
     @Column(name = "location", length = 40, nullable = false)
@@ -61,6 +61,12 @@ public class User {
     @OneToMany(mappedBy = "reportTo")
     private List<Report> reportToList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "reviewFrom")
+    private List<Review> reviewFromList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewTo")
+    private List<Review> reviewToList = new ArrayList<>();
+
     @OneToMany(mappedBy = "user")
     private List<Food> foodList = new ArrayList<>();
 
@@ -72,12 +78,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "reviewFrom")
-    private List<Review> reviewFromList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "reviewTo")
-    private List<Review> reviewToList = new ArrayList<>();
 
     @Builder
     public User(Long userId, String userName, String phoneNumber, String location, Double latitude, Double longitude,

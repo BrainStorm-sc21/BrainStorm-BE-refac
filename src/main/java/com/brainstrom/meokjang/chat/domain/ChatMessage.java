@@ -28,10 +28,10 @@ public class ChatMessage {
     @JoinColumn(name = "sender", referencedColumnName = "user_id", nullable = false)
     private User sender;
 
-    @Column(nullable = false, length = 300)
+    @Column(name = "message", length = 300, nullable = false)
     private String message;
 
-    @Column
+    @Column(name = "time", nullable = false)
     private LocalDateTime time;
 
 //    public static ChatMessage toEntity(ChatMessageDto chatMessageDto, ChatRoom chatRoom, User sender){
