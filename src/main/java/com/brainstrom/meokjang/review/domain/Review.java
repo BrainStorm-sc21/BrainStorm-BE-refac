@@ -1,5 +1,7 @@
 package com.brainstrom.meokjang.review.domain;
 
+import com.brainstrom.meokjang.deal.domain.Deal;
+import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,19 +20,22 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
-    @Column(name = "review_from", nullable = false)
-    private Long reviewFrom;
+    @ManyToOne
+    @JoinColumn(name = "review_from", referencedColumnName = "user_id", nullable = false)
+    private User reviewFrom;
 
-    @Column(name = "review_to", nullable = false)
-    private Long reviewTo;
+    @ManyToOne
+    @JoinColumn(name = "review_to", referencedColumnName = "user_id", nullable = false)
+    private User reviewTo;
 
-    @Column(name = "deal_id", nullable = false)
-    private Long dealId;
+    @ManyToOne
+    @JoinColumn(name = "deal_id", referencedColumnName = "deal_id", nullable = false)
+    private Deal deal;
 
     @Column(name = "rating", nullable = false)
     private Float rating;
 
-    @Column(name = "review_content", length = 1000)
+    @Column(name = "review_content", length = 200)
     private String reviewContent;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -38,10 +43,10 @@ public class Review {
     private LocalDateTime createdAt;
 
     @Builder
-    public Review(Long reviewFrom, Long reviewTo, Long dealId, Float rating, String reviewContent) {
+    public Review(User reviewFrom, User reviewTo, Deal deal, Float rating, String reviewContent) {
         this.reviewFrom = reviewFrom;
         this.reviewTo = reviewTo;
-        this.dealId = dealId;
+        this.deal = deal;
         this.rating = rating;
         this.reviewContent = reviewContent;
     }

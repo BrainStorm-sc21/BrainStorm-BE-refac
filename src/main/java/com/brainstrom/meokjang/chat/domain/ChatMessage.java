@@ -1,42 +1,45 @@
 package com.brainstrom.meokjang.chat.domain;
 
 import com.brainstrom.meokjang.chat.dto.ChatMessageDto;
+import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Table(schema = "CHAT_MESSAGE")
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(schema = "CHAT_MESSAGE")
 public class ChatMessage {
-    @Id
+
+    @Id @Column(name = "chat_message_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_id")
-    private Long id;
+    private Long chatMessageId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "chatRoom_id")
-    private ChatRoom chatRoom;
+    @ManyToOne
+    @JoinColumn(name = "room_id", referencedColumnName = "room_id", nullable = false)
+    private ChatRoom room;
 
-    private Long sender;
+    @ManyToOne
+    @JoinColumn(name = "sender", referencedColumnName = "user_id", nullable = false)
+    private User sender;
 
-    @Column
+    @Column(name = "message", length = 300, nullable = false)
     private String message;
 
-    @Column
+    @Column(name = "time", nullable = false)
     private LocalDateTime time;
 
-    public static ChatMessage toEntity(ChatMessageDto chatMessageDTO, ChatRoom chatRoom){
-        ChatMessage chatMessageEntity = new ChatMessage();
-        chatMessageEntity.setChatRoom(chatRoom);
-        chatMessageEntity.setSender(chatMessageDTO.getSender());
-        chatMessageEntity.setMessage(chatMessageDTO.getMessage());
-        chatMessageEntity.setTime(chatMessageDTO.getTime());
-        return chatMessageEntity;
-
-    }
+//    public static ChatMessage toEntity(ChatMessageDto chatMessageDto, ChatRoom chatRoom, User sender){
+//        ChatMessage chatMessageEntity = new ChatMessage();
+//        chatMessageEntity.setChatRoom(chatRoom);
+//        chatMessageEntity.setSender(sender);
+//        chatMessageEntity.setMessage(chatMessageDto.getMessage());
+//        chatMessageEntity.setTime(chatMessageDto.getTime());
+//        return chatMessageEntity;
+//    }
 }

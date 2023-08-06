@@ -1,5 +1,11 @@
 package com.brainstrom.meokjang.user.domain;
 
+import com.brainstrom.meokjang.chat.domain.ChatRoomUser;
+import com.brainstrom.meokjang.common.domain.Report;
+import com.brainstrom.meokjang.deal.domain.Deal;
+import com.brainstrom.meokjang.food.domain.Food;
+import com.brainstrom.meokjang.notice.domain.Notice;
+import com.brainstrom.meokjang.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +14,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(schema = "USER")
@@ -19,19 +27,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "user_name", length = 8, nullable = false, unique = true)
     private String userName;
 
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number", length = 11, nullable = false, unique = true)
     private String phoneNumber;
 
-    @Column(name = "sns_type")
-    private String snsType;
-
-    @Column(name = "sns_key", unique = true)
-    private String snsKey;
-
-    @Column(name = "location", nullable = false)
+    @Column(name = "location", length = 40, nullable = false)
     private String location;
 
     @Column(name = "latitude", nullable = false)
@@ -40,34 +42,52 @@ public class User {
     @Column(name = "longitude", nullable = false)
     private Double longitude;
 
-    @Column(name = "gender", nullable = false)
-    private Integer gender;
-
     @Column(name = "reliability", nullable = false)
     private Float reliability;
 
     @Column(name = "stop_until")
     private LocalDate stopUntil;
 
-    @Column(name = "firebase_token")
+    @Column(name = "firebase_token", nullable = false, unique = true)
     private String firebaseToken;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "reportFrom")
+    private List<Report> reportFromList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reportTo")
+    private List<Report> reportToList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewFrom")
+    private List<Review> reviewFromList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reviewTo")
+    private List<Review> reviewToList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Food> foodList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Deal> dealList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<ChatRoomUser> chatRoomUserList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Notice> noticeList = new ArrayList<>();
+
     @Builder
-    public User(Long userId, String userName, String phoneNumber, String snsType, String snsKey, String location,
-                Double latitude, Double longitude, Integer gender, Float reliability, LocalDate stopUntil, String firebaseToken) {
+    public User(Long userId, String userName, String phoneNumber, String location, Double latitude, Double longitude,
+                Float reliability, LocalDate stopUntil, String firebaseToken) {
         this.userId = userId;
         this.userName = userName;
         this.phoneNumber = phoneNumber;
-        this.snsType = snsType;
-        this.snsKey = snsKey;
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.gender = gender;
         this.reliability = reliability;
         this.stopUntil = stopUntil;
         this.firebaseToken = firebaseToken;

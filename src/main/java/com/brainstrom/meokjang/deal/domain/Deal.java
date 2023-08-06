@@ -1,6 +1,8 @@
 package com.brainstrom.meokjang.deal.domain;
 
 import com.brainstrom.meokjang.chat.domain.ChatRoom;
+import com.brainstrom.meokjang.review.domain.Review;
+import com.brainstrom.meokjang.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,11 +23,12 @@ public class Deal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dealId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "deal_type", nullable = false)
-    private Integer dealType;
+    private Byte dealType;
 
     @Column(name = "deal_name", length = 30, nullable = false)
     private String dealName;
@@ -42,22 +45,10 @@ public class Deal {
     @Column(name = "longitude", nullable = false)
     private Double longitude;
 
-    @Column(name = "image1", length = 255)
-    private String image1;
-
-    @Column(name = "image2", length = 255)
-    private String image2;
-
-    @Column(name = "image3", length = 255)
-    private String image3;
-
-    @Column(name = "image4", length = 255)
-    private String image4;
-
-    @Column(name = "is_closed")
+    @Column(name = "is_closed", nullable = false)
     private Boolean isClosed;
 
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -67,34 +58,35 @@ public class Deal {
     @OneToMany(mappedBy = "deal", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "deal")
+    private List<DealImage> dealImageList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "deal")
+    private List<Review> reviewList = new ArrayList<>();
+
     @Builder
-    public Deal(Long userId, Integer dealType, String dealName, String dealContent, String location, Double latitude,
-                Double longitude, String image1, String image2, String image3, String image4, Boolean isClosed,
-                Boolean isDeleted) {
-        this.userId = userId;
+    public Deal(User user, Byte dealType, String dealName, String dealContent, String location,
+                Double latitude, Double longitude, Boolean isClosed, Boolean isDeleted) {
+        this.user = user;
         this.dealType = dealType;
         this.dealName = dealName;
         this.dealContent = dealContent;
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.image1 = image1;
-        this.image2 = image2;
-        this.image3 = image3;
-        this.image4 = image4;
         this.isClosed = isClosed;
         this.isDeleted = isDeleted;
     }
 
-    public void update(Integer dealType, String dealName, String dealContent, String[] imageList) {
-        this.dealType = dealType;
-        this.dealName = dealName;
-        this.dealContent = dealContent;
-        this.image1 = imageList[0];
-        this.image2 = imageList[1];
-        this.image3 = imageList[2];
-        this.image4 = imageList[3];
-    }
+//    public void update(Byte dealType, String dealName, String dealContent, String[] imageList) {
+//        this.dealType = dealType;
+//        this.dealName = dealName;
+//        this.dealContent = dealContent;
+//        this.image1 = imageList[0];
+//        this.image2 = imageList[1];
+//        this.image3 = imageList[2];
+//        this.image4 = imageList[3];
+//    }
 
     public void complete() {
         this.isClosed = true;
@@ -104,7 +96,7 @@ public class Deal {
         this.isDeleted = true;
     }
 
-    public String[] getImageList() {
-        return new String[]{image1, image2, image3, image4};
-    }
+//    public String[] getImageList() {
+//        return new String[]{image1, image2, image3, image4};
+//    }
 }

@@ -1,9 +1,7 @@
 package com.brainstrom.meokjang.notice.service;
 
-import com.brainstrom.meokjang.chat.dto.ChatMessageDto;
 import com.brainstrom.meokjang.food.domain.Food;
 import com.brainstrom.meokjang.food.repository.FoodRepository;
-import com.brainstrom.meokjang.food.service.FoodService;
 import com.brainstrom.meokjang.notice.dto.FCMNotificationRequestDto;
 import com.brainstrom.meokjang.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
