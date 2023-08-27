@@ -1,6 +1,6 @@
 ---
 name: Bug Fix
-description: fix bug in code
+about: fix bug in code
 title: "🐛 Bugfix"
 labels: ''
 assignees: ''
