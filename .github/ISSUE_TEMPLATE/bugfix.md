@@ -1,3 +1,12 @@
+---
+name: Bug Fix
+about: fix bug in code
+title: "🐛 Bugfix"
+labels: ''
+assignees: ''
+
+---
+
 ## 문제점
 ---
 
