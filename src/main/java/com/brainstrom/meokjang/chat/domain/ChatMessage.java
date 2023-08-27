@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(schema = "CHAT_MESSAGE")
+@Table(name = "CHAT_MESSAGE")
 @Getter
 @Setter
 @NoArgsConstructor
