@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(schema = "CHAT_ROOM_USER")
+@Table(name = "CHAT_ROOM_USER")
 @Getter
 @NoArgsConstructor
 public class ChatRoomUser {

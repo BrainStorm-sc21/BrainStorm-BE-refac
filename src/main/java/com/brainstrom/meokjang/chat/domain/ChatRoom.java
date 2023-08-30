@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "CHAT_ROOM")
+@Table(name = "CHAT_ROOM")
 public class ChatRoom {
 
     @Id @Column(name = "chat_room_id")
